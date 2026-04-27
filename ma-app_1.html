@@ -1,0 +1,2951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M&A — Acquisition Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-surface: #fafaf7;
+  --bg-tertiary: #f0efea;
+  --text-primary: #1a1a18;
+  --text-secondary: #5e5e58;
+  --text-tertiary: #98978d;
+  --border: #ebeae3;
+  --border-hover: #d0cfc7;
+  --brand: #534AB7;
+  --brand-dark: #3C3489;
+  --brand-light: #EEEDFE;
+  --brand-soft: rgba(83, 74, 183, 0.06);
+  --brand-soft-2: rgba(83, 74, 183, 0.12);
+  --brand-border: rgba(83, 74, 183, 0.22);
+  --info-bg: #E6F1FB;
+  --info-text: #185FA5;
+  --info-strong: #378ADD;
+  --success-bg: #EAF3DE;
+  --success-text: #3B6D11;
+  --success-strong: #639922;
+  --danger-bg: #FCEBEB;
+  --danger-text: #A32D2D;
+  --danger-strong: #E24B4A;
+  --warning-bg: #FAEEDA;
+  --warning-text: #854F0B;
+  --warning-strong: #BA7517;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.app {
+  display: flex;
+  max-width: 1320px;
+  width: 100%;
+  margin: 24px auto;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: calc(100vh - 48px);
+}
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  padding: 16px 12px;
+  border-right: 0.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg);
+}
+.sidebar-title {
+  padding: 6px 12px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.005em;
+}
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--brand);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.12s ease;
+}
+.nav-btn:hover { background: var(--brand-soft); }
+.nav-btn.active {
+  background: var(--brand);
+  color: #ffffff;
+}
+.nav-btn.active:hover { background: var(--brand-dark); }
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 28px 36px 48px;
+  background: var(--bg);
+}
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.page-title-block {
+  margin-bottom: 24px;
+}
+.page-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  margin: 0 0 6px;
+}
+.page-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  padding: 4px 0;
+}
+.crumb:hover { color: var(--text-primary); }
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--brand);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+.btn-primary:hover { background: var(--brand-dark); }
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: transparent;
+  color: var(--brand);
+  border: 0.5px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+.btn-ghost:hover { background: var(--brand-soft); }
+.pip {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0;
+}
+.pip-info { background: var(--info-bg); color: var(--info-text); }
+.pip-success { background: var(--success-bg); color: var(--success-text); }
+.pip-danger { background: var(--danger-bg); color: var(--danger-text); }
+.pip-warning { background: var(--warning-bg); color: var(--warning-text); }
+.pip-brand { background: var(--brand-soft-2); color: var(--brand); }
+.av {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.av-stack { display: flex; }
+.av-stack .av { width: 24px; height: 24px; font-size: 9px; border: 1.5px solid var(--bg); }
+.av-stack .av + .av { margin-left: -7px; }
+.av-stack .av-overflow { background: var(--bg-tertiary); color: var(--text-tertiary); }
+.section-h {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.section-h-link {
+  color: var(--text-tertiary);
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
+}
+.section-h-link:hover { color: var(--text-primary); }
+.brand-tag {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--brand-soft-2);
+  color: var(--brand);
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.stage-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  padding: 0 6px 12px;
+  letter-spacing: 0.01em;
+}
+.round-row {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  transition: border-color 0.14s ease, background 0.14s ease;
+}
+.round-row:hover {
+  border-color: var(--brand-border);
+  background: var(--brand-soft);
+}
+.round-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.round-title-text {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.round-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.round-meta-text {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.date-cell {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  min-width: 36px;
+  text-align: right;
+}
+.progress {
+  display: flex;
+  gap: 4px;
+}
+.seg {
+  flex: 1;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.seg-info { background: var(--info-strong); }
+.seg-success { background: var(--success-strong); }
+.seg-danger { background: var(--danger-strong); }
+.seg-warning { background: var(--warning-strong); }
+.ai-card {
+  background: var(--brand-soft);
+  border: 0.5px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  margin-bottom: 24px;
+}
+.ai-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--brand);
+  margin-bottom: 8px;
+}
+.ai-card p {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin: 0;
+}
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.insight-box {
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--border);
+  background: var(--bg);
+}
+.insight-box-h {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--brand);
+  margin-bottom: 14px;
+}
+.insight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.insight-item { display: flex; gap: 10px; align-items: flex-start; }
+.insight-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--brand);
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+.insight-text {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.insight-reason {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.sugg-card {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.12s;
+}
+.sugg-card:hover { border-color: var(--border-hover); }
+.sugg-head { display: flex; align-items: center; gap: 8px; }
+.sugg-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.sugg-industry { font-size: 11px; color: var(--text-tertiary); }
+.sugg-metric { font-size: 12px; color: var(--text-primary); }
+.sugg-why {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding: 8px 10px;
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+}
+.cands-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.cand-row {
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--border);
+  transition: border-color 0.12s;
+  background: var(--bg);
+}
+.cand-row.leading {
+  background: var(--brand-soft);
+  border-color: var(--brand-border);
+}
+.cand-row:hover { border-color: var(--border-hover); }
+.cand-row.leading:hover { border-color: var(--brand); }
+.cand-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.cand-info { flex: 1; min-width: 0; }
+.cand-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cand-name { font-weight: 500; font-size: 14px; color: var(--text-primary); }
+.cand-name.eliminated {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-tertiary);
+}
+.cand-detail { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+.cand-stage { font-size: 11px; color: var(--text-tertiary); }
+.list-rows {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.list-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 0.5px solid var(--border);
+}
+.list-row:last-child { border-bottom: none; }
+.list-row-icon { color: var(--text-tertiary); flex-shrink: 0; margin-top: 1px; }
+.list-row-text { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.list-row-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+.list-row-content { flex: 1; min-width: 0; }
+.checkbox {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--text-tertiary);
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.checkbox.done {
+  background: var(--success-strong);
+  border-color: var(--success-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.task-text.done {
+  color: var(--text-tertiary);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+.topics-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.topic {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  color: var(--text-secondary);
+}
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-tertiary);
+}
+.empty-state h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.empty-state p { font-size: 13px; }
+/* Candidate detail page */
+.cand-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.cand-identity .av {
+  width: 56px;
+  height: 56px;
+  font-size: 16px;
+}
+.cand-identity h1 {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+}
+.cand-identity .meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.cand-progress-block {
+  margin-bottom: 24px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--border);
+  background: var(--bg);
+}
+.cand-progress-block .progress { margin-top: 10px; }
+.cand-progress-stages {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+}
+.reasoning-card {
+  background: var(--brand-soft);
+  border: 0.5px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+.reasoning-card h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brand);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.reasoning-points {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.reasoning-point {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.reasoning-point .num {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.reasoning-point-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+.reasoning-point-detail {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.metric-card {
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+}
+.metric-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+.metric-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.metric-value.positive { color: var(--success-text); }
+.sc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.sc-item .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.sc-item .dot.s { background: var(--success-strong); }
+.sc-item .dot.c { background: var(--warning-strong); }
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-left: 1.5px solid var(--border);
+  padding-left: 16px;
+  margin-left: 6px;
+}
+.timeline-item {
+  position: relative;
+  padding: 6px 0 14px;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item:before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 10px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid var(--brand);
+}
+.timeline-item.first:before { background: var(--brand); }
+.timeline-date {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+.timeline-event {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.cand-row.clickable { cursor: pointer; }
+/* Sherpany brand */
+.sidebar-brand {
+  padding: 6px 12px 22px;
+}
+.logo-img {
+  height: 36px;
+  width: auto;
+  max-width: 180px;
+  display: block;
+  margin-bottom: 8px;
+}
+.logo-tag {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* Sync with Datasite Pipeline button — yellow */
+.btn-sync-grata {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: #FACC15;
+  color: #1a1a18;
+  border: 0.5px solid #EAB308;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, border-color 0.12s;
+  line-height: 1;
+}
+.btn-sync-grata:hover { background: #EAB308; border-color: #CA8A04; }
+.btn-sync-grata .partner-logo {
+  height: 16px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 1px;
+}
+.sync-status {
+  font-size: 10px;
+  color: rgba(26, 26, 24, 0.55);
+  margin-left: 4px;
+}
+/* Responsible-person block */
+.responsible-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--brand-soft);
+  border: 0.5px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+}
+.responsible-block .av {
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+  background: var(--bg);
+  border-color: var(--brand-border);
+  color: var(--brand);
+}
+.resp-content { flex: 1; min-width: 0; }
+.resp-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.resp-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.resp-role { font-size: 12px; color: var(--text-secondary); }
+.resp-action { font-size: 13px; color: var(--text-primary); margin-bottom: 3px; line-height: 1.45; }
+.resp-due {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.resp-due .overdue { color: var(--danger-text); font-weight: 500; }
+.btn-meeting {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg);
+  color: var(--brand);
+  border: 0.5px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, border-color 0.12s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.btn-meeting:hover {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+}
+/* Next step block — subordinate, sits below current responsible */
+.next-step-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px 12px 18px;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-left: 2px solid var(--brand-border);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: -16px 0 24px 16px;
+}
+.next-step-block .av {
+  width: 28px;
+  height: 28px;
+  font-size: 10px;
+  background: var(--bg-surface);
+}
+.next-step-content { flex: 1; min-width: 0; }
+.next-step-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+.next-step-label {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--brand);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.next-step-name {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.next-step-role {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.next-step-stage {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 0.5px solid var(--border);
+}
+.next-step-action {
+  font-size: 13px;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+  line-height: 1.5;
+}
+.next-step-expected {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+/* ============================================================================ */
+/* BOARD REPORT — SLIDE DECK STYLE                                              */
+/* ============================================================================ */
+.report-page { max-width: none; margin: 0; }
+.report-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  border-bottom: 0.5px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: -24px -24px 0;
+}
+.report-actions-left { display: flex; align-items: center; gap: 16px; }
+.slide-counter {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-feature-settings: 'tnum';
+  letter-spacing: 0.04em;
+}
+.report-actions-right { display: flex; gap: 8px; }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px;
+  background: var(--bg);
+  color: var(--text-primary);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 12px; font-weight: 500;
+  cursor: pointer; font-family: inherit;
+  transition: background 0.12s, border-color 0.12s;
+}
+.btn-secondary:hover { background: var(--bg-surface); border-color: var(--border-hover); }
+
+/* Slide container */
+.slide {
+  padding: 56px 64px;
+  border-bottom: 0.5px solid var(--border);
+  position: relative;
+  margin: 0 -24px;
+}
+.slide:last-child { border-bottom: none; }
+.slide-num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+  font-feature-settings: 'tnum';
+}
+.slide-title {
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  color: var(--text-primary);
+  margin: 0 0 36px;
+  line-height: 1.1;
+}
+
+/* Cover slide */
+.slide-cover {
+  background: var(--text-primary);
+  color: #fff;
+  padding: 80px 64px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 56px;
+  align-items: end;
+  min-height: 380px;
+}
+.cover-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 22px;
+}
+.cover-title {
+  font-size: 46px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #fff;
+  margin: 0 0 14px;
+}
+.cover-subtitle {
+  font-size: 16px;
+  color: rgba(255,255,255,0.78);
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 480px;
+}
+.cover-meta {
+  border-left: 1px solid rgba(255,255,255,0.15);
+  padding-left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.cover-meta-item .label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 4px;
+}
+.cover-meta-item .value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+.cover-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  background: rgba(255,255,255,0.1);
+  border: 0.5px solid rgba(255,255,255,0.2);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.02em;
+  width: fit-content;
+}
+.cover-status-badge .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--brand);
+}
+.cover-status-badge.success .dot { background: var(--success-text); }
+.cover-status-badge.danger .dot { background: var(--danger-text); }
+.cover-status-badge.warning .dot { background: var(--warning-text); }
+
+/* Executive summary slide */
+.slide-exec { background: var(--bg-surface); }
+.exec-headline {
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.018em;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 22px;
+  max-width: 760px;
+}
+.exec-headline em {
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 60%, var(--brand-soft) 60%);
+  padding: 0 2px;
+}
+.exec-detail {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 780px;
+}
+
+/* Pillars (strategic rationale) */
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.pillar {
+  padding: 22px 20px;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  border-top: 3px solid var(--brand);
+  position: relative;
+}
+.pillar-num {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-feature-settings: 'tnum';
+}
+.pillar-icon {
+  width: 40px; height: 40px;
+  background: var(--brand-soft);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--brand);
+  margin-bottom: 14px;
+}
+.pillar-title {
+  font-size: 15px; font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.005em;
+}
+.pillar-text {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.rationale-detail {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 800px;
+  padding-top: 18px;
+  border-top: 0.5px solid var(--border);
+}
+
+/* Status pipeline */
+.slide-status { background: var(--bg-surface); }
+.pipeline {
+  display: flex;
+  align-items: flex-start;
+  margin: 0 0 36px;
+  padding: 28px 8px 0;
+  position: relative;
+}
+.pipe-stage {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+.pipe-stage::after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+.pipe-stage:last-child::after { display: none; }
+.pipe-stage.done::after, .pipe-stage.current::after { background: var(--brand); }
+.pipe-stage.terminal::after { background: var(--border); }
+.pipe-stage .dot {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  margin: 0 auto 12px;
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  font-size: 13px;
+}
+.pipe-stage.done .dot {
+  background: var(--brand); border-color: var(--brand); color: #fff;
+}
+.pipe-stage.current .dot {
+  background: var(--brand); border-color: var(--brand); color: #fff;
+  width: 46px; height: 46px;
+  margin-top: -4px;
+  box-shadow: 0 0 0 5px var(--brand-soft);
+}
+.pipe-stage.terminal-success .dot {
+  background: var(--success-text); border-color: var(--success-text); color: #fff;
+}
+.pipe-stage.terminal-danger .dot {
+  background: var(--danger-text); border-color: var(--danger-text); color: #fff;
+}
+.pipe-stage .name {
+  font-size: 11.5px; font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: -0.005em;
+}
+.pipe-stage.current .name { color: var(--brand); font-weight: 600; }
+.pipe-stage.done .name { color: var(--text-primary); }
+.pipe-stage .sub {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.status-headline {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  letter-spacing: -0.012em;
+}
+.status-detail {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 760px;
+}
+
+/* Financial slide — headline metric */
+.headline-metric {
+  text-align: center;
+  padding: 44px 24px 36px;
+  background: linear-gradient(180deg, var(--brand-soft) 0%, transparent 100%);
+  border-radius: var(--radius-md);
+  margin-bottom: 32px;
+  border: 0.5px solid var(--brand-border);
+}
+.hm-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 18px;
+}
+.hm-value {
+  font-size: 72px;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  color: var(--brand);
+  line-height: 1;
+  margin-bottom: 14px;
+  font-feature-settings: 'tnum';
+}
+.hm-sub {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Price scenarios bar chart */
+.scenarios {
+  margin: 0 0 36px;
+  padding: 24px;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.scenarios-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 20px;
+}
+.scenario {
+  margin-bottom: 16px;
+}
+.scenario:last-child { margin-bottom: 0; }
+.scenario-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.scenario-label {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+.scenario-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-feature-settings: 'tnum';
+  letter-spacing: -0.01em;
+}
+.scenario-track {
+  height: 10px;
+  background: var(--bg-surface);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.scenario-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scenario.target .scenario-fill { background: var(--bg-tertiary); }
+.scenario.target .scenario-value { color: var(--text-secondary); }
+.scenario.recommended .scenario-fill { background: var(--success-text); }
+.scenario.ask .scenario-fill { background: var(--warning-text); }
+.scenario.envelope .scenario-fill { background: var(--brand); }
+
+/* Financial supporting metrics */
+.fin-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.fin-metric {
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.fin-metric-label {
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+.fin-metric-value {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+  font-feature-settings: 'tnum';
+}
+.fin-metric-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Risk slide */
+.slide-risk { background: var(--bg-surface); }
+.risk-grid { display: grid; gap: 12px; }
+.risk-card {
+  display: flex;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.risk-card-bar { width: 5px; flex-shrink: 0; }
+.risk-card-bar.high { background: var(--danger-text); }
+.risk-card-bar.medium { background: var(--warning-text); }
+.risk-card-bar.low { background: var(--success-text); }
+.risk-card-content { flex: 1; padding: 16px 20px; }
+.risk-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.risk-card-icon {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.risk-card-icon.high { background: var(--danger-bg); color: var(--danger-text); }
+.risk-card-icon.medium { background: var(--warning-bg); color: var(--warning-text); }
+.risk-card-icon.low { background: var(--success-bg); color: var(--success-text); }
+.risk-card-level {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.risk-card-level.high { color: var(--danger-text); }
+.risk-card-level.medium { color: var(--warning-text); }
+.risk-card-level.low { color: var(--success-text); }
+.risk-card-text {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+  flex: 1;
+  line-height: 1.4;
+}
+.risk-card-mit {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  padding-left: 40px;
+}
+.risk-card-mit-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 9.5px;
+  margin-right: 6px;
+}
+
+/* Decisions slide */
+.decisions-grid { display: grid; gap: 10px; }
+.decision-card {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.decision-card.critical {
+  background: var(--brand-soft);
+  border-color: var(--brand-border);
+  border-left: 3px solid var(--brand);
+}
+.decision-card-num {
+  width: 64px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 600;
+  color: var(--text-tertiary);
+  font-feature-settings: 'tnum';
+  border-right: 0.5px solid var(--border);
+}
+.decision-card.critical .decision-card-num {
+  color: var(--brand);
+  border-right-color: var(--brand-border);
+}
+.decision-card-body {
+  flex: 1;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.decision-card-tags {
+  display: flex; gap: 8px;
+  margin-bottom: 6px;
+}
+.decision-card-tag {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 0.5px solid var(--border);
+  color: var(--text-tertiary);
+  background: var(--bg-surface);
+}
+.decision-card.critical .decision-card-tag.kind {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+}
+.decision-card-ask {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.005em;
+  line-height: 1.45;
+}
+
+/* Recommendation slide (final) */
+.slide-rec {
+  background: var(--text-primary);
+  color: #fff;
+  padding: 72px 64px;
+}
+.slide-rec .slide-num { color: rgba(255,255,255,0.4); }
+.slide-rec .slide-title { color: #fff; margin-bottom: 28px; }
+.rec-statement {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: #fff;
+  letter-spacing: -0.008em;
+  max-width: 820px;
+}
+.rec-mark {
+  width: 38px; height: 4px;
+  background: var(--brand);
+  margin-bottom: 28px;
+  border-radius: 2px;
+}
+.report-footer {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  padding: 18px;
+  background: var(--bg);
+  letter-spacing: 0.06em;
+  margin: 0 -24px -24px;
+}
+
+@media print {
+  body { background: #fff; }
+  .app { border: none; box-shadow: none; margin: 0; }
+  .sidebar { display: none; }
+  .report-actions { display: none; }
+  .slide { page-break-after: always; padding: 40px 50px; }
+  .slide:last-child { page-break-after: auto; }
+}
+/* Enriched timeline */
+.timeline-who {
+  font-size: 11px;
+  color: var(--brand);
+  font-weight: 500;
+  margin-top: 3px;
+}
+.timeline-note {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border-left: 2px solid var(--border);
+}
+.fade-in {
+  animation: fadeIn 0.18s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.meta-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  flex-wrap: wrap;
+}
+.meta-pills .sep { color: var(--text-tertiary); }
+.deal-count { font-size: 12px; color: var(--text-tertiary); }
+@media (max-width: 880px) {
+  .two-col { grid-template-columns: 1fr; }
+  .suggestions-grid { grid-template-columns: 1fr; }
+  .main { padding: 20px 20px 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg class="logo-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 415.41">
+        <defs>
+          <style>
+            .sl-1 { fill: #ffc600; }
+            .sl-2 { fill: #ff7256; }
+            .sl-3 { fill: #6435d9; }
+          </style>
+        </defs>
+        <g>
+          <polygon class="sl-1" points="46.84 88.98 3.03 86.31 3.21 114.9 47 111.69 46.84 88.98"/>
+          <polygon class="sl-3" points="62.32 58.29 15.75 25.27 .5 49.46 50.21 77.53 62.32 58.29"/>
+          <path d="M149.55,121.8c-7.31-2.5-15.39-4.71-23.97-6.62-8.54-2.05-15.5-4.39-20.69-6.94-5.1-2.5-7.56-5.78-7.56-10.08s1.78-7.78,5.46-10.52c3.66-2.75,8.95-4.14,15.68-4.14s12.5,1.53,16.59,4.53c4.07,2.98,6.56,7.22,7.4,12.54l.09.5h27.56l-.09-.66c-1.57-12.7-6.9-22.65-15.87-29.61-8.95-6.94-20.78-10.47-35.14-10.47-15.59,0-27.91,3.82-36.6,11.4-8.72,7.58-13.13,17.16-13.13,28.52,0,8.24,2.44,14.86,7.28,19.69,4.78,4.78,10.86,8.54,18.07,11.13,7.15,2.57,14.43,4.69,21.69,6.24,9.22,1.89,16.55,4.01,21.74,6.31,5.08,2.25,7.53,6.42,7.53,12.79,0,4.28-1.84,8.15-5.49,11.47-3.66,3.32-9.63,5.03-17.71,5.03s-15.02-2.09-20.05-6.21c-5.05-4.12-8.29-9.1-9.63-14.8l-.11-.46h-28.82l.09.66c1.57,13.2,7.74,23.97,18.35,31.96,10.58,7.97,24.17,12.02,40.45,12.02s28.73-3.96,38.01-11.79c9.33-7.85,13.98-17.82,13.79-29.68,0-9.42-2.32-16.68-6.9-21.6-4.53-4.87-10.56-8.63-17.96-11.15l-.09-.05Z"/>
+          <path d="M266.95,60.34c-9.38,0-18.05,2.16-25.77,6.42-7.1,3.92-12.84,9.24-17.09,15.89V6.03h-28.61v186.9h28.61v-66.81c0-13.22,3.37-23.54,10.06-30.64,6.67-7.08,15.18-10.68,25.31-10.68,19.62,0,29.16,12,29.16,36.65v71.47h28.34v-74.32c0-19.21-4.48-33.87-13.36-43.59-8.88-9.72-21.19-14.66-36.65-14.66h0v-.02Z"/>
+          <path d="M536.16,67.81c-7.53,4.62-13.59,10.88-18.05,18.6l-2.21-22.94h-25.7v129.47h28.61v-62.14c0-10.36,1.75-18.57,5.21-24.4,3.46-5.8,8.15-9.99,13.95-12.43,5.85-2.46,12.61-3.71,20.08-3.71h8.1v-29.89h-.59c-11.43,0-21.33,2.53-29.41,7.47h0v-.02Z"/>
+          <path d="M693.17,69.22c-9.54-5.9-20.69-8.88-33.16-8.88-11.45,0-20.94,2.39-28.25,7.08-6.78,4.37-12.29,9.4-16.37,14.98l-2.71-18.96h-25.68v184.05h28.59v-72.82c4.42,6.51,10.24,11.65,17.37,15.34,7.72,3.98,16.73,6.01,26.79,6.01,12.63,0,23.88-2.94,33.41-8.76,9.54-5.8,17.14-13.88,22.6-24.01,5.46-10.13,8.22-21.83,8.22-34.8s-2.75-24.72-8.22-34.94c-5.46-10.22-13.07-18.39-22.6-24.29h0ZM694.86,128.2c0,12.72-3.78,23.15-11.22,31.02-7.44,7.85-17.05,11.84-28.54,11.84s-21.05-3.98-28.41-11.84c-7.35-7.88-11.09-18.3-11.09-31.02s3.73-22.94,11.09-30.89c7.35-7.94,16.91-11.97,28.41-11.97,7.78,0,14.73,1.84,20.65,5.46,5.92,3.64,10.63,8.74,14.02,15.16,3.41,6.44,5.12,13.93,5.12,22.24h-.02Z"/>
+          <path d="M849.37,81.85c-4.26-6.58-10.06-11.79-17.25-15.5-7.72-3.98-16.82-6.01-27.04-6.01-12.47,0-23.67,2.94-33.28,8.76-9.63,5.8-17.23,13.88-22.6,24.01-5.37,10.13-8.08,21.83-8.08,34.8s2.71,24.72,8.08,34.94c5.37,10.22,12.93,18.39,22.47,24.29,9.54,5.9,20.69,8.88,33.16,8.88,11.43,0,20.94-2.39,28.25-7.08,6.74-4.35,12.22-9.36,16.3-14.89l1.71,18.87h26.75V63.46h-27l-1.46,18.41h0v-.02ZM838.15,97.17c7.35,7.88,11.09,18.3,11.09,31.02s-3.73,22.94-11.09,30.89c-7.35,7.94-16.91,11.97-28.41,11.97-7.63,0-14.52-1.84-20.51-5.49-6.01-3.64-10.77-8.74-14.14-15.16-3.39-6.42-5.1-13.91-5.1-22.22,0-12.72,3.78-23.15,11.22-31.02,7.44-7.85,17.05-11.84,28.54-11.84s21.05,3.98,28.38,11.84h0Z"/>
+          <path d="M977.09,60.34c-10.06,0-19.07,2.34-26.81,6.94-7.17,4.26-12.79,10.04-16.75,17.23l-1.93-21.05h-25.45v129.47h28.61v-66.81c0-13.22,3.3-23.56,9.81-30.64,6.49-7.08,14.82-10.68,24.79-10.68,20.14,0,29.93,12,29.93,36.65v71.47h28.34v-74.32c0-19.21-4.53-33.87-13.48-43.59-8.97-9.74-21.44-14.68-37.06-14.68h0Z"/>
+          <polygon points="1097.48 247.49 1179.35 64.28 1179.74 63.46 1149.46 63.46 1108.74 157.47 1069.8 63.46 1038.75 63.46 1089.96 182.32 1096.93 182.32 1067.22 247.49 1097.48 247.49"/>
+          <path d="M437.28,68.83c-9.38-5.65-20.53-8.49-33.16-8.49s-24.54,2.89-34.3,8.6c-9.79,5.71-17.53,13.79-22.99,24.04-5.46,10.22-8.22,22.24-8.22,35.71s2.82,25.17,8.35,35.21c5.53,10.06,13.34,18,23.1,23.63,9.79,5.62,21.17,8.49,33.8,8.49,15.25,0,28.2-4.14,38.51-12.29,10.31-8.15,17.3-18.44,20.76-30.57l.2-.75h-28.59l-.16.36c-2.53,5.92-6.42,10.65-11.56,14.09-5.14,3.46-11.61,5.19-19.21,5.19-9.47,0-17.89-3.21-25.08-9.54-7.06-6.21-11.09-15.39-12.04-27.29h99.77c.77-7.92,2.21-24.22-5.21-39.88-6.12-12.88-14.66-20.87-24.01-26.5h0l.05-.02ZM367.31,115.45c1.62-10.33,5.85-18.19,12.61-23.38,6.94-5.33,15-8.01,23.95-8.01,9.63,0,18.48,2.91,24.9,8.65,6.26,5.62,9.74,13.27,10.38,22.76h-71.84v-.02Z"/>
+          <polygon class="sl-2" points="91.91 40.99 76.16 0 50.21 12.02 71.29 50.55 91.91 40.99"/>
+        </g>
+        <g>
+          <path d="M491.71,388.84v-106.28h10.16v40.32c5.15-10.31,13.92-15.63,26.1-15.63,20.63,0,31.72,17.04,31.72,41.73s-10.79,41.73-31.72,41.73c-11.26,0-20.95-5.32-26.1-15.63v13.75h-10.16ZM501.87,355.55c0,15.16,9.23,26.25,24.22,26.25,14.07,0,22.66-9.23,22.66-20.78v-24.08c0-11.57-8.6-20.78-22.66-20.78-15,0-24.22,11.09-24.22,26.25v13.14Z"/>
+          <path d="M600.18,373.99l22.98-64.86h11.26l-39.07,106.28h-23.91v-8.91h16.88l6.4-17.66-29.55-79.71h11.72l22.66,64.86h.63Z"/>
+          <path d="M709.6,282.56c30.48,0,44.08,16.73,44.08,53.14s-13.6,53.14-44.08,53.14h-32.82v-106.28h32.82ZM687.72,292.72v85.96h21.42c20.17,0,32.04-10.16,32.04-27.35v-31.26c0-17.19-11.72-27.35-31.89-27.35h-21.56Z"/>
+          <path d="M815.75,334.14c0-14.07-7.67-17.97-18.9-17.97s-18.75,5.15-18.75,15.95h-10.16c0-14.85,12.04-24.86,29.23-24.86s28.6,8.45,28.6,27.2v45.47h11.72v8.91h-20.47l-.32-15.48h-.47c-4.37,11.26-13.43,17.34-25.32,17.34-7.81,0-15-2.49-19.22-7.03-4.06-4.22-6.4-10.48-6.4-16.73,0-12.5,6.4-21.42,20.32-22.66l30.16-2.81v-7.35l-.02.02ZM782.61,353.21c-4.84.47-6.57,2.98-6.57,7.81v8.74c0,8.13,6.4,12.04,16.56,12.04,14.38,0,23.13-11.26,23.13-27.67v-3.91l-33.14,2.98h.02Z"/>
+          <path d="M862.02,379.93h19.07v8.91h-29.23v-70.8h-13.28v-8.91h13.28v-26.57h10.16v26.57h19.07v8.91h-19.07v61.88h0Z"/>
+          <path d="M938.75,334.14c0-14.07-7.67-17.97-18.9-17.97s-18.75,5.15-18.75,15.95h-10.16c0-14.85,12.04-24.86,29.23-24.86s28.6,8.45,28.6,27.2v45.47h11.72v8.91h-20.47l-.32-15.48h-.47c-4.37,11.26-13.43,17.34-25.32,17.34-7.81,0-15-2.49-19.22-7.03-4.06-4.22-6.4-10.48-6.4-16.73,0-12.5,6.4-21.42,20.32-22.66l30.16-2.81v-7.35l-.02.02ZM905.62,353.21c-4.84.47-6.57,2.98-6.57,7.81v8.74c0,8.13,6.4,12.04,16.56,12.04,14.38,0,23.13-11.26,23.13-27.67v-3.91l-33.14,2.98h.02Z"/>
+          <path d="M1002.68,344.91c15,3.13,22.51,10.01,22.51,22.81s-11.26,22.98-30.01,22.98c-17.19,0-30.48-9.38-30.79-26.25h10.16c.32,11.41,9.84,17.34,20.78,17.34s19.68-4.84,19.68-13.92c0-7.96-4.37-11.41-15.95-13.92l-13.14-2.81c-11.87-2.49-19.54-8.91-19.54-21.56s11.26-22.35,27.67-22.35c14.21,0,28.28,7.5,28.6,24.86h-10.16c-.32-11.26-8.6-15.95-18.44-15.95-10.62,0-17.82,5.47-17.82,13.28s4.84,11.09,12.97,12.65l13.43,2.81.04.02Z"/>
+          <path d="M1050.05,294.9h-10.79v-10.79h10.79v10.79ZM1039.58,388.84v-79.71h10.16v79.71h-10.16Z"/>
+          <path d="M1084.75,379.93h19.07v8.91h-29.23v-70.8h-13.28v-8.91h13.28v-26.57h10.16v26.57h19.07v8.91h-19.07v61.88h0Z"/>
+          <path d="M1176.35,364.3c-1.88,17.04-15.63,26.42-31.72,26.42-22.66,0-32.82-17.34-32.82-41.73s11.09-41.73,32.67-41.73,32.67,17.82,32.67,38.14v6.72h-54.38v8.6c0,12.97,10.79,21.1,22.03,21.1s20-5.32,21.42-17.51h10.16-.02ZM1166.19,337.26c0-13.14-10.01-21.1-21.73-21.1s-21.73,7.96-21.73,21.1v5.94h43.44v-5.94h.02Z"/>
+          <path d="M1186.19,286.32c7.91,0,14.31,6.42,14.31,14.31s-6.42,14.31-14.31,14.31-14.31-6.42-14.31-14.31,6.42-14.31,14.31-14.31ZM1186.23,313.34c6.94,0,12.61-5.64,12.61-12.58s-5.69-12.61-12.61-12.61-12.58,5.69-12.58,12.61,5.64,12.58,12.58,12.58ZM1183.29,302.12v5.36h-1.8v-13.71h5.88c2.62,0,4.07,1.45,4.07,4.15,0,2.34-1.13,3.76-3.07,4.07l3.18,5.49h-2.1l-2.98-5.36h-3.18ZM1187.92,300.55c1,0,1.49-.73,1.49-1.56v-2.14c0-.93-.52-1.49-1.49-1.49h-4.63v5.21h4.63v-.02Z"/>
+        </g>
+      </svg>
+    </div>
+    <button class="nav-btn" onclick="goMeetings()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+        <path d="m22 8-6 4 6 4V8Z"/>
+        <rect x="2" y="6" width="14" height="12" rx="2"/>
+      </svg>
+      <span>Meetings</span>
+    </button>
+    <button class="nav-btn active" onclick="goList()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+        <path d="M3 4H12V9a3 3 0 0 1 0 6V20H3Z"/>
+        <path d="M12 4h9v16h-9v-5a3 3 0 0 0 0-6Z"/>
+      </svg>
+      <span>M&amp;A</span>
+    </button>
+  </aside>
+
+  <main class="main">
+    <div id="list-view"></div>
+    <div id="detail-view" style="display: none;"></div>
+    <div id="candidate-view" style="display: none;"></div>
+    <div id="report-view" style="display: none;"></div>
+    <div id="meetings-view" style="display: none;">
+      <div class="empty-state">
+        <h3>Meetings</h3>
+        <p>This view isn't built yet — the M&amp;A pipeline is the focus of this prototype.</p>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+// ============================================================================
+// DATA
+// ============================================================================
+const rounds = [
+  {
+    id: 'extend-ai',
+    title: 'Extend AI capability',
+    status: 'Sourcing', statusType: 'info', stage: 'Sourcing',
+    date: 'today', opened: '2 days ago', owner: 'Priya M.',
+    progress: 1, progressType: 'info',
+    candidatePreview: ['SA', 'CL', 'N'],
+    candidatePreviewNames: 'Synapse AI · Cortex Labs · Neuralis',
+    candidateCount: 3,
+    summary: 'Round just opened. Initial target list assembled across foundation-model labs and applied AI tooling. No outreach completed yet — first contacts scheduled for this week. Strategic intent: acquire AI capability rather than build internally, with priority on teams shipping production systems at scale.',
+    nextSteps: [
+      { text: 'Schedule first outreach calls with all 3 candidates', reason: 'Round at sourcing — get initial conversations on calendar before competitors' },
+      { text: 'Define evaluation rubric: tech, team, fit', reason: 'No rubric in place; past rounds without one took 2x longer to converge' },
+      { text: 'Brief CTO on top candidates by Friday', reason: 'Technical depth assessment needed early to filter list' }
+    ],
+    learnings: [
+      { type: 'success', label: 'Closed', text: 'Front-runner identified by week 4 closed in 6 weeks', source: 'Pattern across 3 closed rounds' },
+      { type: 'danger', label: 'Rejected', text: 'Talent-only acquisitions failed when retention packages were not pre-negotiated', source: 'From past acqui-hire attempts' },
+      { type: 'info', label: 'Active', text: 'Local advisor engagement in week 1 cut close timeline by ~40%', source: 'From: Launch fintech vertical' }
+    ],
+    suggestions: [
+      { initials: 'AX', name: 'Axiom Reasoning', industry: 'Foundation models · USA', metric: '$12M ARR', growth: '+180% YoY', growthType: 'success', why: 'Strong inference research team; founders ex-DeepMind' },
+      { initials: 'LS', name: 'Lattice Systems', industry: 'AI infra · Canada', metric: '$22M ARR', growth: 'Series B raised', growthType: 'info', why: 'Lookalike to Synapse AI but with stronger enterprise traction' },
+      { initials: 'MD', name: 'Mindforge', industry: 'Applied AI · UK', metric: '$8M ARR', growth: '+120% YoY', growthType: 'success', why: 'Vertical AI for finance; complements existing portfolio' }
+    ],
+    candidates: [
+      { id: 'synapse-ai', initials: 'SA', name: 'Synapse AI', detail: 'Foundation models · USA · $18M ARR', status: 'Active', statusType: 'info', stage: 'Sourcing', progress: 1, progressType: 'info' },
+      { id: 'cortex-labs', initials: 'CL', name: 'Cortex Labs', detail: 'Applied AI · USA · $11M ARR', status: 'Active', statusType: 'info', stage: 'Sourcing', progress: 1, progressType: 'info' },
+      { id: 'neuralis', initials: 'N', name: 'Neuralis', detail: 'AI infrastructure · Germany · $7M ARR', status: 'Active', statusType: 'info', stage: 'Sourcing', progress: 1, progressType: 'info' }
+    ],
+    meetings: [
+      { title: 'Round kickoff — strategic alignment', meta: 'Yesterday · 5 attendees' }
+    ],
+    activity: [
+      { type: 'task', done: false, text: 'Send introductory email to Synapse AI', meta: 'Priya M. · due tomorrow' },
+      { type: 'task', done: false, text: 'Build evaluation rubric template', meta: 'Tom K. · due Friday' },
+      { type: 'decision', text: 'Prioritize foundation-model teams over applied AI', meta: 'Priya M. · 1 day ago' }
+    ],
+    topics: ['foundation models', 'inference', 'team retention', 'IP transfer', 'compute spend'],
+    boardReport: {
+      date: 'October 27, 2026',
+      preparedBy: 'Priya M., Director of Corp Dev',
+      type: 'Initial round opening — endorsement requested',
+      executiveSummary: 'New round opened to acquire in-house AI capability. Three strong targets identified through Grata thematic search across foundation models, applied AI, and AI infrastructure. No outreach completed yet — proposing parallel pursuit of all three before convergence. Seeking board endorsement of strategic direction (acquire vs build) and approval of $500K diligence budget.',
+      strategicRationale: 'AI capability is now table-stakes for our product portfolio. Internal build path is estimated at 24–36 months; the competitive window is closing now. Acquiring a team with shipping AI products gets us 18 months ahead and embeds proven engineering culture. The three candidates each represent a distinct AI thesis — pursuing in parallel preserves optionality before committing to one bet.',
+      pillars: [
+        { icon: 'zap', title: 'Time-to-market', text: '24–36 months internal build vs ~6 months acquired in a closing competitive window.' },
+        { icon: 'users', title: 'Embedded talent', text: 'Hire intact teams with shipping AI products and a proven engineering culture, not isolated hires.' },
+        { icon: 'target', title: 'Optionality preserved', text: 'Three distinct theses pursued in parallel before convergence on a single bet.' }
+      ],
+      statusHeadline: 'Round opened 2 days ago — Sourcing stage',
+      statusDetail: 'Outreach scheduled this week. No NDAs signed. Estimated convergence on a single candidate within 8–12 weeks.',
+      headlineMetric: { label: 'Diligence budget — board ask', value: '$500K', sub: 'External advisory + legal · enables 8–12 week pursuit' },
+      financial: [
+        { label: 'Estimated deal range', value: '$80M – $200M', sub: 'Spans the 3 candidate sizes' },
+        { label: 'Diligence budget (ask)', value: '$500K', sub: 'External advisory + legal' },
+        { label: 'Expected close', value: 'Q1 2027', sub: 'If timeline holds' },
+        { label: 'Funding source', value: 'Existing balance sheet', sub: 'No new debt required' }
+      ],
+      risks: [
+        { level: 'high', text: 'Talent retention post-close (AI talent is highly mobile)', mitigation: 'Pre-negotiated 3-yr retention packages; founder equity rollover required' },
+        { level: 'high', text: 'Competitive landscape — multiple acquirers chasing top AI targets', mitigation: 'Move on intent signals fast; consider exclusivity clauses early in diligence' },
+        { level: 'medium', text: 'IP and regulatory complexity in foundation-model targets', mitigation: 'External AI counsel engaged for diligence' }
+      ],
+      decisions: [
+        { ask: 'Endorse strategic direction (acquire vs build internally)', type: 'critical', deadline: 'This board meeting' },
+        { ask: 'Approve $500K initial diligence budget', type: 'critical', deadline: 'This board meeting' },
+        { ask: 'Confirm board sponsor for the round', type: 'standard', deadline: 'This board meeting' }
+      ],
+      recommendation: 'Endorse the round and approve the diligence budget. Proceed with all three candidates in parallel, with convergence on a single target by end of Q4. Bring back a full acquisition proposal for board approval at the December meeting.'
+    }
+  },
+
+  {
+    id: 'enter-southeast-asia',
+    title: 'Enter Southeast Asia market',
+    status: 'In progress', statusType: 'info', stage: 'Diligence',
+    date: '3d', opened: '3 weeks ago', owner: 'Maya R.',
+    progress: 3, progressType: 'info',
+    candidatePreview: ['SC', 'BP', 'JL', '+1'],
+    candidatePreviewNames: 'Saigon Cloud · Bangkok Pay · +2 more',
+    candidateCount: 4,
+    summary: 'Saigon Cloud has emerged as the lead candidate after strong diligence around revenue growth and Vietnam regulatory clarity. Bangkok Pay remains active but flagged for compliance review. Java Logistics is paused pending revised valuation; Manila Tech was eliminated for market overlap. Next milestone: complete Saigon Cloud diligence by month end.',
+    nextSteps: [
+      { text: 'Schedule on-site visit at Saigon Cloud HQ', reason: 'Front-runner is at Negotiation; in-person diligence improved close rates in 4 of last 5 rounds' },
+      { text: 'Engage Vietnam regulatory advisor this week', reason: 'APAC deals delayed avg. 6 weeks when local counsel engaged late' },
+      { text: 'Resolve Bangkok Pay compliance flag by Friday', reason: 'Open question is blocking other diligence work streams' },
+      { text: 'Decide on Java Logistics or eliminate', reason: 'Paused for 12 days — longest among active candidates' }
+    ],
+    learnings: [
+      { type: 'success', label: 'Closed', text: 'Local advisor engagement in week 1 cut close timeline by ~40%', source: 'From: Launch fintech vertical (PayBridge)' },
+      { type: 'danger', label: 'Rejected', text: 'All 3 candidates walked when NDA signing slipped past week 3', source: 'From: Build cybersecurity practice' },
+      { type: 'info', label: 'Active', text: 'Initial pricing came in 15% above benchmark — set EBITDA ceiling early', source: 'From: Vertically integrate supply chain' },
+      { type: 'success', label: 'Closed', text: 'Front-runner identified by week 4 closed in 6 weeks; later identification took 14+', source: 'Pattern across 3 closed rounds' }
+    ],
+    suggestions: [
+      { initials: 'NB', name: 'NeoBank Hanoi', industry: 'Payments · Vietnam', metric: '$28M ARR', growth: '+65% YoY', growthType: 'success', why: 'Lookalike to Saigon Cloud\'s local market position; complementary fintech wedge' },
+      { initials: 'MC', name: 'Mekong Cloud', industry: 'Cloud infra · Vietnam', metric: '$52M ARR', growth: 'profitable', growthType: 'success', why: 'Larger-scale lookalike to Saigon Cloud; viable fallback if negotiation stalls' },
+      { initials: 'DS', name: 'DeltaShip ASEAN', industry: 'Logistics · Indonesia', metric: '$19M ARR', growth: 'Series B last week', growthType: 'info', why: 'Strong intent signal from recent raise; potential replacement for Java Logistics' }
+    ],
+    candidates: [
+      { id: 'saigon-cloud', initials: 'SC', name: 'Saigon Cloud', detail: 'Cloud infrastructure · Vietnam · $80M ARR', leading: true, status: 'Leading', statusType: 'brand', stage: 'Negotiation', progress: 4, progressType: 'info',
+        details: {
+          metrics: [
+            { label: 'ARR', value: '$80M' },
+            { label: 'Growth', value: '+45% YoY', positive: true },
+            { label: 'EBITDA margin', value: '18%', positive: true },
+            { label: 'Headcount', value: '210' },
+            { label: 'Founded', value: '2018' },
+            { label: 'Location', value: 'Ho Chi Minh City' }
+          ],
+          reasoning: {
+            headline: 'Why Saigon Cloud is leading',
+            points: [
+              { title: 'Strongest revenue traction in the round', detail: '$80M ARR with profitable unit economics — ~2x the next candidate (Bangkok Pay at $42M)' },
+              { title: 'Regulatory clarity confirmed early', detail: 'Vietnam regulatory advisor cleared all licensing in week 2 of diligence — historically the biggest APAC blocker' },
+              { title: 'Cultural fit signal positive', detail: 'Founder/CEO alignment confirmed across 3 separate discussions; no red flags raised' },
+              { title: 'Strong mutual intent', detail: 'Term sheet response within 48 hours of submission, indicating high engagement on their side' }
+            ]
+          },
+          strengths: ['Revenue at scale', 'Profitable unit economics', 'Regulatory clarity', 'Cultural fit confirmed', 'Mature ops team'],
+          concerns: ['Pricing 8% above target benchmark', 'Integration complexity high (data migration ~6 months)'],
+          nextOwner: { initials: 'MR', name: 'Maya R.', role: 'Deal lead', action: 'Reviewing Q3 financials before final pricing call', status: 'In review', due: 'Friday', daysLeft: 2 },
+          nextStep: { initials: 'TK', name: 'Tom K.', role: 'CFO representative', stage: 'Final pricing call', action: 'Negotiate price down to ~$73M (5% above target benchmark, vs current 8%)', expected: 'Next week' },
+          timeline: [
+            { date: 'Yesterday', event: 'Diligence sync — Q3 financials reviewed and validated', who: 'Maya R.', note: 'All key revenue metrics validated. Open follow-up: customer concentration ratio above target threshold (top 5 customers = 38%).' },
+            { date: '3 days ago', event: 'Term sheet drafted and submitted', who: 'Tom K.', note: 'Used standard template. Pricing came in 8% above benchmark target; rationale documented for CFO review.' },
+            { date: '1 week ago', event: 'On-site HQ visit scheduled for next month', who: 'Maya R.', note: '5-person team confirmed (deal lead, CTO, CFO rep, integration lead, regulatory advisor).' },
+            { date: '2 weeks ago', event: 'Initial diligence package received and reviewed', who: 'Diligence team', note: 'Standard package delivered on time. Quality high; no major gaps in financials or customer references.' },
+            { date: '3 weeks ago', event: 'Round opened — Saigon Cloud identified as top candidate', who: 'Priya M. (via Grata)', note: 'Identified through Grata lookalike search against Vietnam fintech thesis. Top score in initial ranking.' }
+          ],
+          nextSteps: [
+            { text: 'Complete on-site HQ visit before final negotiation', reason: 'In-person diligence improved close rates in 4 of last 5 leads' },
+            { text: 'Lock down post-close integration plan', reason: 'Past acquisitions underestimated integration cost by ~30%' },
+            { text: 'Negotiate price down to ≤5% above target', reason: 'Current ask is 8% over; CFO ceiling is 10%' }
+          ]
+        }
+      },
+      { id: 'bangkok-pay', initials: 'BP', name: 'Bangkok Pay', detail: 'Payments · Thailand · $42M ARR', status: 'Active', statusType: 'info', stage: 'Diligence', progress: 3, progressType: 'info',
+        details: {
+          metrics: [
+            { label: 'ARR', value: '$42M' },
+            { label: 'Growth', value: '+35% YoY', positive: true },
+            { label: 'EBITDA margin', value: '6%' },
+            { label: 'Headcount', value: '95' },
+            { label: 'Founded', value: '2019' },
+            { label: 'Location', value: 'Bangkok' }
+          ],
+          reasoning: {
+            headline: 'Active but flagged for compliance review',
+            points: [
+              { title: 'Strong product-market fit', detail: 'Top-3 consumer payments app in Thailand with 35% YoY growth' },
+              { title: 'Compliance flag raised in week 2', detail: 'Cross-border money movement license under review by internal compliance team — verdict pending' },
+              { title: 'Modern tech stack favorable for integration', detail: 'API-first architecture; estimated integration only ~3 months vs. 6 for Saigon Cloud' },
+              { title: 'Diligence partially blocked', detail: 'Financial diligence paused until compliance verdict; cannot move to Negotiation yet' }
+            ]
+          },
+          strengths: ['Strong PMF in Thailand', 'Modern API-first stack', 'Fast integration potential', 'Engaged founders'],
+          concerns: ['Pending compliance verdict', 'Smaller scale than front-runner', 'Lower margins'],
+          nextOwner: { initials: 'AC', name: 'Alex C.', role: 'Compliance lead', action: 'Reviewing cross-border money movement license', status: 'In review', due: 'Friday', daysLeft: 2 },
+          nextStep: { initials: 'MR', name: 'Maya R.', role: 'Deal lead', stage: 'Resume financial diligence', action: 'Resume Q3 financial review on accelerated timeline once compliance clears', expected: 'Next Monday (assuming Friday verdict)' },
+          timeline: [
+            { date: '3 days ago', event: 'Initial pitch meeting — product walkthrough', who: 'Maya R., Tom K.', note: 'Strong demo of consumer payments flow. Founders engaged and well-prepared. Tech stack favorable.' },
+            { date: '1 week ago', event: 'NDA signed; financial data room opened', who: 'Legal team', note: 'Standard MNDA. Data room access granted to deal team and external auditors.' },
+            { date: '2 weeks ago', event: 'Compliance flag raised — review initiated', who: 'Alex C. (compliance)', note: 'Cross-border license category requires deeper review. Estimated 5 business days; SLA Friday this week.' },
+            { date: '3 weeks ago', event: 'Round opened — Bangkok Pay added to candidate list', who: 'Priya M. (via Grata)', note: 'Identified as top-3 Thailand payments target via Grata thematic search.' }
+          ],
+          nextSteps: [
+            { text: 'Get compliance team\'s verdict by Friday', reason: 'Open question is blocking financial diligence; team SLA is 5 business days' },
+            { text: 'If cleared: resume financial diligence on accelerated timeline', reason: 'Already 1 week behind original schedule' },
+            { text: 'If not cleared: decide whether to pause or eliminate', reason: 'Avoid the "slow eliminate" pattern that hurt cybersecurity round' }
+          ]
+        }
+      },
+      { id: 'java-logistics', initials: 'JL', name: 'Java Logistics', detail: 'Logistics · Indonesia · $28M ARR', status: 'Paused', statusType: 'warning', stage: 'Outreach', progress: 2, progressType: 'warning',
+        details: {
+          metrics: [
+            { label: 'ARR', value: '$28M' },
+            { label: 'Growth', value: '+22% YoY' },
+            { label: 'EBITDA margin', value: '11%' },
+            { label: 'Headcount', value: '140' },
+            { label: 'Founded', value: '2017' },
+            { label: 'Location', value: 'Jakarta' }
+          ],
+          reasoning: {
+            headline: 'Why Java Logistics is paused',
+            points: [
+              { title: 'Initial valuation came in 30% above benchmark', detail: 'Asked $180M against benchmark $135M — too high to justify without new diligence data' },
+              { title: 'Awaiting revised pricing for 12 days', detail: 'Longest pause among any active candidate this round; no response to last 2 follow-ups' },
+              { title: 'Otherwise solid candidate', detail: 'Operations strong, founding team intact, would unlock Indonesia market entry' },
+              { title: 'Pause is becoming a risk', detail: 'Competitors may engage if we don\'t move; intent signals from 2 other parties detected via Grata' }
+            ]
+          },
+          strengths: ['Strong operations', 'Indonesia market entry', 'Stable founding team', 'Good cultural fit'],
+          concerns: ['Initial valuation 30% over benchmark', 'Slow communication during pause', 'Competitive interest emerging'],
+          nextOwner: { initials: 'JP', name: 'Jordan P.', role: 'Deal owner', action: 'Awaiting revised pricing from candidate; decision needed on continue vs eliminate', status: 'Awaiting response', due: 'Friday', daysLeft: 2, overdue: true },
+          nextStep: { initials: 'JP', name: 'Jordan P.', role: 'Deal owner', stage: 'Decision: continue or eliminate', action: 'Send "best and final" offer at $145M, or formally eliminate from round', expected: 'Decision by Friday' },
+          timeline: [
+            { date: '12 days ago', event: 'Initial term sheet rejected on pricing', who: 'Jordan P.', note: 'Counter-party rejected our $135M offer; no counter-counter offered. Communication has slowed since.' },
+            { date: '2 weeks ago', event: 'First negotiation call — pricing gap surfaced', who: 'Jordan P., Tom K.', note: '$45M gap between ask ($180M) and our benchmark ($135M). 30% premium not justifiable on current data.' },
+            { date: '3 weeks ago', event: 'NDA signed; data room access granted', who: 'Legal team', note: 'Standard NDA. Data quality moderate; some financial details missing in initial package.' },
+            { date: '4 weeks ago', event: 'Round opened; Java Logistics identified', who: 'Priya M. (via Grata)', note: 'Identified as Indonesia logistics play. Strong fundamentals on paper; pricing concern flagged at sourcing.' }
+          ],
+          nextSteps: [
+            { text: 'Decide by Friday: continue waiting or eliminate', reason: 'Pause has exceeded normal threshold (10 days); decision overdue' },
+            { text: 'If continuing: send firm "best and final" offer', reason: 'Forces clarity; prevents indefinite limbo' },
+            { text: 'If eliminating: notify and document for retrospective', reason: 'Pattern of 30%+ pricing gaps worth tracking for future rounds' }
+          ]
+        }
+      },
+      { id: 'manila-tech', initials: 'MT', name: 'Manila Tech', detail: 'SaaS platform · Philippines · $15M ARR', status: 'Eliminated', statusType: 'danger', stage: 'Sourcing', progress: 1, progressType: 'danger', eliminated: true,
+        details: {
+          metrics: [
+            { label: 'ARR', value: '$15M' },
+            { label: 'Growth', value: '+50% YoY', positive: true },
+            { label: 'EBITDA margin', value: '-5%' },
+            { label: 'Headcount', value: '60' },
+            { label: 'Founded', value: '2020' },
+            { label: 'Location', value: 'Manila' }
+          ],
+          reasoning: {
+            headline: 'Why Manila Tech was eliminated',
+            points: [
+              { title: 'Regulatory overlap with existing portfolio', detail: 'Their Philippines SaaS license category overlaps with PortfolioCo X — would trigger antitrust review' },
+              { title: 'Smallest scale among candidates', detail: '$15M ARR; would not move the needle on the Southeast Asia revenue target by itself' },
+              { title: 'Decision made early to focus resources', detail: 'Eliminated week 1 to focus diligence capacity on top 3 candidates — followed the "early eliminate" pattern from playbook' },
+              { title: 'Could be revisited if regulatory landscape changes', detail: 'Quarterly review of regulatory situation; Manila Tech remains on watchlist' }
+            ]
+          },
+          strengths: ['Modern product', 'Young founding team', 'High growth rate'],
+          concerns: ['Regulatory overlap (blocking)', 'Sub-scale ARR', 'Negative EBITDA', 'Limited strategic fit'],
+          timeline: [
+            { date: '5 days ago', event: 'Officially eliminated; team notified', who: 'Jordan P.', note: 'Notified Manila Tech leadership by email. Cordial response; left door open for future conversations.' },
+            { date: '6 days ago', event: 'Regulatory overlap analysis completed by legal team', who: 'Legal team', note: 'Confirmed antitrust review would be triggered. Risk of blocked deal too high to proceed.' },
+            { date: '2 weeks ago', event: 'Initial review meeting — overlap concern raised', who: 'Sam L. (compliance)', note: 'Sam flagged potential overlap with PortfolioCo X based on initial product review.' },
+            { date: '3 weeks ago', event: 'Identified during Grata sourcing scan', who: 'Priya M. (via Grata)', note: 'Came up in Philippines SaaS sweep. Initial fit score moderate; eliminated before deeper scoring.' }
+          ],
+          nextSteps: [
+            { text: 'Add to quarterly regulatory watchlist', reason: 'Could re-emerge if antitrust landscape changes' },
+            { text: 'Document for retrospective and playbook', reason: 'Good example of effective early elimination' },
+            { text: 'No further action this quarter', reason: 'Decision is final until landscape change triggers re-review' }
+          ]
+        }
+      }
+    ],
+    meetings: [
+      { title: 'Saigon Cloud — diligence sync', meta: 'Yesterday · 4 attendees' },
+      { title: 'Bangkok Pay — initial pitch', meta: '3 days ago · 3 attendees' },
+      { title: 'Round kickoff — strategic review', meta: '2 weeks ago · 6 attendees' }
+    ],
+    activity: [
+      { type: 'task', done: false, text: 'Review Saigon Cloud Q3 financials', meta: 'Maya R. · due Friday' },
+      { type: 'task', done: true, text: 'Sign NDA with Bangkok Pay', meta: 'Completed last week' },
+      { type: 'decision', text: 'Eliminate Manila Tech (regulatory overlap)', meta: 'Jordan P. · 5 days ago' },
+      { type: 'decision', text: 'Prioritize Saigon Cloud for negotiation', meta: 'Maya R. · 1 week ago' }
+    ],
+    topics: ['regulatory clarity', 'local partnerships', 'tech stack alignment', 'valuation', 'integration cost', 'cultural fit', 'licensing'],
+    boardReport: {
+      date: 'October 27, 2026',
+      preparedBy: 'Maya R., Director of Corp Dev',
+      type: 'Status update — acquisition envelope approval requested',
+      executiveSummary: 'Saigon Cloud has emerged as the front-runner after 3 weeks of focused diligence. Pricing negotiation is underway with the current ask 8% above target. Expected acquisition envelope $80M–$95M. Seeking board pre-approval of ceiling at $95M and CFO authority to close within envelope before competitive interest from regional PE develops.',
+      strategicRationale: 'Southeast Asia represents 22% of our addressable market growth over the next 5 years. Organic entry would take 3–5 years and require ~$60M of investment with uncertain timing. Acquisition delivers $80M ARR Day 1, established team, regulatory licenses, and customer relationships. Saigon Cloud specifically offers a Vietnam beachhead with profitable unit economics — atypical for the regional market.',
+      pillars: [
+        { icon: 'globe', title: 'Market scale', text: 'SEA is 22% of addressable market growth over the next 5 years — too large to defer.' },
+        { icon: 'zap', title: 'Speed to market', text: 'Organic entry: 3–5 years and ~$60M. Acquisition delivers $80M ARR Day 1.' },
+        { icon: 'shield', title: 'Regulatory beachhead', text: 'Saigon Cloud has Vietnam licensing already in place — atypical and a real moat.' }
+      ],
+      statusHeadline: 'At Diligence — 60% complete',
+      statusDetail: 'Saigon Cloud at Negotiation; Bangkok Pay at Diligence (compliance flag pending Friday); Java Logistics paused (pricing gap, decision Friday); Manila Tech eliminated (regulatory overlap with portfolio).',
+      headlineMetric: { label: 'Acquisition envelope — board ask', value: 'Up to $95M', sub: 'For Saigon Cloud · includes contingency for final negotiation' },
+      priceScenarios: [
+        { label: 'Target benchmark', display: '$80M', value: 80, kind: 'target' },
+        { label: 'Recommended counter', display: '$73M', value: 73, kind: 'recommended' },
+        { label: 'Current ask', display: '$86M', value: 86, kind: 'ask' },
+        { label: 'Board envelope ceiling', display: '$95M', value: 95, kind: 'envelope' }
+      ],
+      financial: [
+        { label: 'Saigon Cloud current ask', value: '$86M', sub: '8% above $80M target benchmark' },
+        { label: 'Proposed counter', value: '$73M', sub: '5% above target' },
+        { label: 'Acquisition envelope (ask)', value: 'Up to $95M', sub: 'Includes contingency for final negotiation' },
+        { label: 'Integration budget', value: '$1.2M', sub: 'Data migration ~6 months' },
+        { label: 'Expected EBITDA Y1', value: '$14M', sub: 'Tracking to plan' },
+        { label: 'Expected payback', value: '~4 years', sub: 'Standard for APAC market entry' }
+      ],
+      risks: [
+        { level: 'high', text: 'Vietnam regulatory complexity (cross-border data, foreign ownership rules)', mitigation: 'Local counsel engaged week 1; cleared in week 2 — no licensing blockers' },
+        { level: 'medium', text: 'Integration complexity — data migration estimated 6 months', mitigation: '$1.2M integration budget; dedicated integration lead identified' },
+        { level: 'medium', text: 'Founder retention post-close', mitigation: 'Term sheet includes 3-yr retention package + equity rollover' },
+        { level: 'low', text: 'Competitive interest from regional PE — early intent signals via Grata', mitigation: 'Move quickly to exclusivity at term sheet stage' }
+      ],
+      decisions: [
+        { ask: 'Approve up to $95M acquisition envelope for Saigon Cloud', type: 'critical', deadline: 'This board meeting' },
+        { ask: 'Approve $1.2M integration budget', type: 'critical', deadline: 'This board meeting' },
+        { ask: 'Authorize CFO to execute within envelope without further board action', type: 'standard', deadline: 'This board meeting' },
+        { ask: 'Note progress on Bangkok Pay (compliance) and Java Logistics (decision Friday)', type: 'fyi', deadline: 'For information' }
+      ],
+      recommendation: 'Approve the acquisition envelope and proceed with Saigon Cloud. Eliminate Java Logistics by end of week if no revised pricing. Continue Bangkok Pay if compliance clears Friday; otherwise pause with clear timeline. Target close by end of Q1 2027.'
+    }
+  },
+
+  {
+    id: 'integrate-supply-chain',
+    title: 'Vertically integrate supply chain',
+    status: 'In progress', statusType: 'info', stage: 'Negotiation',
+    date: '1w', opened: '6 weeks ago', owner: 'Jordan P.',
+    progress: 4, progressType: 'info',
+    candidatePreview: ['CC', 'FO'],
+    candidatePreviewNames: 'ChainCore · FreightOps',
+    candidateCount: 2,
+    summary: 'Round in late-stage negotiation with two finalists. ChainCore leads on technology fit but FreightOps offers stronger cost synergies. Initial pricing came in 15% above benchmark; counter-offers prepared. Decision expected within 2 weeks — board approval required for either path.',
+    nextSteps: [
+      { text: 'Submit counter-offer to ChainCore by Wednesday', reason: 'Their exclusivity window expires in 5 days' },
+      { text: 'Schedule board pre-read for FreightOps fallback', reason: 'Board needs 10 days notice; do not wait until ChainCore decision' },
+      { text: 'Lock down integration plan with both finalists', reason: 'Past rounds underestimated post-merger integration by 30%' }
+    ],
+    learnings: [
+      { type: 'success', label: 'Closed', text: 'Locking integration plan pre-close prevented 80% of post-deal surprises', source: 'From: Launch fintech vertical' },
+      { type: 'info', label: 'Active', text: 'Counter-offers within 5% of ask had 70% acceptance; >10% had 20%', source: 'Pattern across last 8 negotiations' },
+      { type: 'danger', label: 'Rejected', text: 'Two-finalist standoffs without a clear deadline historically lost both candidates', source: 'From past pipeline analysis' }
+    ],
+    suggestions: [
+      { initials: 'PL', name: 'PortLink Global', industry: 'Logistics tech · Netherlands', metric: '$120M ARR', growth: 'profitable', growthType: 'success', why: 'Larger backup option if ChainCore and FreightOps both fall through' },
+      { initials: 'NX', name: 'Nexus Freight', industry: 'Freight forwarding · USA', metric: '$45M ARR', growth: '+25% YoY', growthType: 'success', why: 'Adjacent capability; potential bolt-on after primary acquisition' }
+    ],
+    candidates: [
+      { id: 'chaincore', initials: 'CC', name: 'ChainCore', detail: 'Supply chain SaaS · USA · $65M ARR', leading: true, status: 'Leading', statusType: 'brand', stage: 'Negotiation', progress: 4, progressType: 'info' },
+      { id: 'freightops', initials: 'FO', name: 'FreightOps', detail: 'Logistics platform · Germany · $40M ARR', status: 'Active', statusType: 'info', stage: 'Negotiation', progress: 4, progressType: 'info' }
+    ],
+    meetings: [
+      { title: 'ChainCore — pricing negotiation', meta: '2 days ago · 5 attendees' },
+      { title: 'FreightOps — exec alignment', meta: '4 days ago · 4 attendees' },
+      { title: 'Internal pricing strategy', meta: '1 week ago · 6 attendees' }
+    ],
+    activity: [
+      { type: 'task', done: false, text: 'Prepare counter-offer for ChainCore', meta: 'Jordan P. · due Wednesday' },
+      { type: 'task', done: true, text: 'Complete tech diligence on both finalists', meta: 'Completed 1 week ago' },
+      { type: 'decision', text: 'Use 8.5x EBITDA as ceiling for either deal', meta: 'CFO · 4 days ago' }
+    ],
+    topics: ['EBITDA multiple', 'integration plan', 'counter-offer strategy', 'board approval', 'cost synergies'],
+    boardReport: {
+      date: 'October 27, 2026',
+      preparedBy: 'Jordan P., VP Strategic Partnerships',
+      type: 'Decision request — pricing ceiling and selection authority',
+      executiveSummary: 'Two finalists in active negotiation. ChainCore leads on technology fit; FreightOps offers stronger cost synergies but weaker tech alignment. Seeking board approval of pricing ceiling at 8.5x EBITDA and authority for the executive team to select between the two without further board action — preserves speed in a tight competitive window.',
+      strategicRationale: 'Supply chain costs have grown 23% over 2 years, eroding gross margin by ~180bps. Internal procurement optimization is saturated. Vertical integration via acquisition is projected to reduce supply chain costs by 18% within 3 years (~$45M annual savings). Both candidates would deliver this; the trade-off is technology fit vs cost synergy magnitude.',
+      pillars: [
+        { icon: 'trendingUp', title: 'Margin restoration', text: 'Costs +23% over 2 years. Vertical integration projected to recover 18% within 3 years.' },
+        { icon: 'dollar', title: 'Synergy capture', text: '$28M (ChainCore) / $34M (FreightOps) Y1 cost synergies — well above cost of capital.' },
+        { icon: 'shield', title: 'Competitive moat', text: 'Removes a key competitor lever and locks in supplier relationships across the network.' }
+      ],
+      statusHeadline: 'At Negotiation — both finalists in counter-offer stage',
+      statusDetail: 'ChainCore exclusivity window expires in 5 days. FreightOps maintained as backup. Decision needed within 2 weeks.',
+      headlineMetric: { label: 'Pricing ceiling — board ask', value: '8.5x EBITDA', sub: 'Either candidate · CFO authority to select within ceiling' },
+      priceScenarios: [
+        { label: 'ChainCore ask · 8.5x', display: '$560M', value: 560, kind: 'ask' },
+        { label: 'FreightOps ask · 8.0x', display: '$340M', value: 340, kind: 'recommended' }
+      ],
+      financial: [
+        { label: 'ChainCore current ask', value: '$560M', sub: '8.5x EBITDA — at ceiling' },
+        { label: 'FreightOps current ask', value: '$340M', sub: '8.0x EBITDA' },
+        { label: 'Board EBITDA ceiling (ask)', value: '8.5x', sub: 'Either candidate' },
+        { label: 'Y1 cost synergies', value: '$28M (CC) / $34M (FO)', sub: 'FreightOps higher' },
+        { label: 'Integration reserve', value: '$4.5M', sub: 'Substantially identical for both' },
+        { label: 'Expected payback', value: '5.5 yrs (CC) / 4 yrs (FO)', sub: 'Pre-financing' }
+      ],
+      risks: [
+        { level: 'high', text: 'Two-finalist standoff could lose both candidates if mishandled', mitigation: 'Tight ChainCore deadline communicated; FreightOps held in active discussion as backup' },
+        { level: 'high', text: 'Integration complexity for either path (multi-system migration)', mitigation: 'Dedicated integration team identified; $4.5M reserve set aside' },
+        { level: 'medium', text: 'Pricing discipline — current asks already at proposed ceiling', mitigation: 'CFO walk-away authority; board pre-approval at 8.5x prevents creep' },
+        { level: 'medium', text: 'FX exposure (FreightOps EUR-denominated)', mitigation: 'FX hedging strategy in place if FreightOps selected' }
+      ],
+      decisions: [
+        { ask: 'Approve pricing ceiling at 8.5x EBITDA for either candidate', type: 'critical', deadline: 'This board meeting' },
+        { ask: 'Authorize executive team to select final candidate within ceiling', type: 'critical', deadline: 'This board meeting' },
+        { ask: 'Approve $4.5M integration reserve', type: 'standard', deadline: 'This board meeting' }
+      ],
+      recommendation: 'Approve the ceiling and the selection authority. Proceed with ChainCore as primary; keep FreightOps as backup until ChainCore signs definitive agreement. Targeted close mid-Q1 2027.'
+    }
+  },
+
+  {
+    id: 'cybersecurity-practice',
+    title: 'Build cybersecurity practice',
+    status: 'Rejected', statusType: 'danger', stage: 'Diligence',
+    date: '2w', opened: '4 months ago · closed last month', owner: 'Sam L.',
+    progress: 3, progressType: 'danger',
+    candidatePreview: ['BS', 'RS', 'NG'],
+    candidatePreviewNames: 'Bastion Security · RedShield · NetGuard',
+    candidateCount: 3,
+    summary: 'Round closed without acquisition. All three candidates withdrew during diligence — Bastion accepted a competing offer, RedShield citied valuation gap, NetGuard walked due to NDA delays past week 3. Strategic objective unmet; team recommending build-from-acquihire path going forward.',
+    nextSteps: [
+      { text: 'Document round retrospective for the playbook', reason: 'Three withdrawals in one round is a pattern worth analyzing' },
+      { text: 'Identify acqui-hire candidates as alternative path', reason: 'Strategic objective still open; build-vs-buy needs revisiting' },
+      { text: 'Brief CISO on alternative capability paths', reason: 'CISO is sponsor; needs status before next quarter planning' }
+    ],
+    learnings: [
+      { type: 'danger', label: 'Lesson', text: 'NDA signing past week 3 correlates with 80% candidate withdrawal', source: 'This round + 2 prior failures' },
+      { type: 'danger', label: 'Lesson', text: 'Sequential diligence (one candidate at a time) reduces leverage in negotiation', source: 'This round vs. parallel-tracked successful rounds' },
+      { type: 'info', label: 'Pattern', text: 'Hot sectors (cybersecurity, AI) have 2x competitive pressure; speed matters more than thoroughness early', source: 'Sector benchmarking' }
+    ],
+    suggestions: [
+      { initials: 'SF', name: 'SignalFlare', industry: 'Threat intelligence · Israel', metric: '$24M ARR', growth: '+90% YoY', growthType: 'success', why: 'Acqui-hire candidate; strong founding team, smaller deal size' },
+      { initials: 'PG', name: 'PerimeterGuard', industry: 'Network security · USA', metric: '$38M ARR', growth: '+40% YoY', growthType: 'success', why: 'Established player; lower competitive pressure than failed candidates' }
+    ],
+    candidates: [
+      { id: 'bastion-security', initials: 'BS', name: 'Bastion Security', detail: 'Endpoint security · USA · $32M ARR', status: 'Walked', statusType: 'danger', stage: 'Diligence', progress: 3, progressType: 'danger', eliminated: true },
+      { id: 'redshield', initials: 'RS', name: 'RedShield', detail: 'Cloud security · Canada · $28M ARR', status: 'Walked', statusType: 'danger', stage: 'Diligence', progress: 3, progressType: 'danger', eliminated: true },
+      { id: 'netguard', initials: 'NG', name: 'NetGuard', detail: 'Network security · UK · $19M ARR', status: 'Walked', statusType: 'danger', stage: 'Outreach', progress: 2, progressType: 'danger', eliminated: true }
+    ],
+    meetings: [
+      { title: 'Round retrospective', meta: '1 week ago · 8 attendees' },
+      { title: 'NetGuard — final discussion', meta: '3 weeks ago · 4 attendees' },
+      { title: 'Bastion — diligence kickoff', meta: '6 weeks ago · 5 attendees' }
+    ],
+    activity: [
+      { type: 'task', done: true, text: 'Notify all candidates of round closure', meta: 'Completed 2 weeks ago' },
+      { type: 'task', done: false, text: 'Write retrospective document', meta: 'Sam L. · due next week' },
+      { type: 'decision', text: 'Close round; pursue acqui-hire path instead', meta: 'CISO · 3 weeks ago' },
+      { type: 'decision', text: 'Decline RedShield counter-offer at $48M', meta: 'CFO · 5 weeks ago' }
+    ],
+    topics: ['NDA timing', 'competitive bids', 'acqui-hire pivot', 'retrospective', 'sector dynamics'],
+    boardReport: {
+      date: 'October 27, 2026',
+      preparedBy: 'Sam L., Director of Corp Dev (closing report)',
+      type: 'Round closure report — pivot strategy approval requested',
+      executiveSummary: 'Round closed without acquisition. All three candidates withdrew during diligence — Bastion to a competing offer, RedShield over a $48M valuation gap, NetGuard over NDA delays past week 3. Strategic objective remains open. Recommending pivot to acqui-hire strategy with reduced capital footprint and capital return of $40M from original budget.',
+      strategicRationale: 'Cybersecurity capability remains essential for product credibility in regulated verticals (financial services, healthcare). The acquisition path failed not from strategic misalignment but from execution: (a) hot competitive market with multiple acquirers, (b) sequential rather than parallel diligence approach, and (c) NDA process delays that gave competitors time to engage. The strategic case is unchanged — only the execution path needs to change.',
+      pillars: [
+        { icon: 'target', title: 'Strategic case unchanged', text: 'Cybersecurity capability remains essential for credibility in financial services and healthcare verticals.' },
+        { icon: 'book', title: 'Execution learnings captured', text: 'Three concrete fixes: parallel diligence, week-1 NDA signing, faster decisions on competitive bids.' },
+        { icon: 'dollar', title: 'Capital returned', text: '$40M of original $80M budget returned to balance sheet for the new approach.' }
+      ],
+      statusHeadline: 'Round closed — strategic objective unmet',
+      statusDetail: 'All candidates notified. Retrospective complete. Three concrete learnings captured in the playbook for future rounds.',
+      headlineMetric: { label: 'Capital returned to balance sheet', value: '$40M', sub: 'Of original $80M approved budget · re-deployable to acqui-hire path' },
+      financial: [
+        { label: 'Diligence costs spent', value: '$280K', sub: 'Legal, advisory, internal time' },
+        { label: 'Acquisition consideration paid', value: '$0', sub: 'No deal closed' },
+        { label: 'Original budget approved', value: '$80M', sub: 'Q1 2026 board approval' },
+        { label: 'Recommended re-deployment', value: '$40M', sub: 'For acqui-hire path' },
+        { label: 'Estimated cost per acqui-hire', value: '$8M – $15M', sub: 'Multiple parallel acqui-hires possible' },
+        { label: 'Capital returned to balance sheet', value: '$40M', sub: 'Vs original budget' }
+      ],
+      risks: [
+        { level: 'high', text: 'Strategic objective remains unmet; competitors closing capability gap', mitigation: 'Pivot to acqui-hire path can begin immediately if approved this meeting' },
+        { level: 'medium', text: 'Acqui-hire path takes 18–24 months for full capability vs 6 months for acquisition', mitigation: 'Parallel multiple acqui-hires; staged capability build with quarterly checkpoints' },
+        { level: 'low', text: 'Reputational impact from withdrawn negotiations', mitigation: 'All exits handled professionally; relationships preserved for future rounds' }
+      ],
+      decisions: [
+        { ask: 'Approve formal closure of round', type: 'standard', deadline: 'This board meeting' },
+        { ask: 'Endorse pivot to acqui-hire strategy', type: 'critical', deadline: 'This board meeting' },
+        { ask: 'Reauthorize $40M of original budget for the new approach', type: 'critical', deadline: 'This board meeting' }
+      ],
+      recommendation: 'Close this round. Launch new "Acquire cybersecurity talent" round with $40M envelope and parallel acqui-hire strategy. Apply three learnings: parallel diligence (not sequential), week-1 NDA signing (hard rule), faster decisions when competitive bids surface.'
+    }
+  },
+
+  {
+    id: 'fintech-vertical',
+    title: 'Launch fintech vertical',
+    status: 'Closed', statusType: 'success', stage: 'Close',
+    date: '1mo', opened: '6 months ago · closed 1 month ago', owner: 'Maya R.',
+    progress: 5, progressType: 'success',
+    candidatePreview: ['PB'],
+    candidatePreviewNames: 'PayBridge — acquired',
+    candidateCount: 1,
+    summary: 'Round closed successfully with PayBridge acquisition. Deal closed in 5 months, 30% ahead of average timeline. Local M&A advisor engaged in week 1 was the critical success factor. PayBridge integrated into the fintech vertical 3 weeks post-close; revenue contribution tracking ahead of plan.',
+    nextSteps: [
+      { text: 'Complete 90-day integration review', reason: 'Standard post-close milestone; due in 2 weeks' },
+      { text: 'Document playbook for next acquisition', reason: 'This round\'s pattern is replicable; capture before details fade' },
+      { text: 'Schedule retention check-in with PayBridge founders', reason: 'Founder retention at month 3 predicts long-term success' }
+    ],
+    learnings: [
+      { type: 'success', label: 'Win', text: 'Local M&A advisor in week 1 reduced timeline by ~40%', source: 'Validated this round' },
+      { type: 'success', label: 'Win', text: 'Single-candidate focus (vs. multi-candidate) when fit is clear avoids decision paralysis', source: 'This round vs. cybersecurity round' },
+      { type: 'info', label: 'Pattern', text: 'Pre-close integration planning prevented all major post-deal surprises', source: 'Validated in this and 2 prior closes' }
+    ],
+    suggestions: [
+      { initials: 'BS', name: 'BridgePay LATAM', industry: 'Payments · Mexico', metric: '$45M ARR', growth: '+70% YoY', growthType: 'success', why: 'PayBridge sister-market; could extend the vertical regionally' },
+      { initials: 'WS', name: 'WireStack', industry: 'B2B payments · USA', metric: '$60M ARR', growth: 'profitable', growthType: 'success', why: 'B2B complement to PayBridge\'s consumer focus' }
+    ],
+    candidates: [
+      { id: 'paybridge', initials: 'PB', name: 'PayBridge', detail: 'Consumer payments · Brazil · $95M ARR · acquired for $420M', leading: true, status: 'Acquired', statusType: 'success', stage: 'Close', progress: 5, progressType: 'success' }
+    ],
+    meetings: [
+      { title: 'Post-close integration review', meta: '2 weeks ago · 12 attendees' },
+      { title: 'PayBridge — closing ceremony', meta: '1 month ago · 18 attendees' },
+      { title: 'Final negotiation — pricing lock', meta: '6 weeks ago · 6 attendees' }
+    ],
+    activity: [
+      { type: 'task', done: true, text: 'Complete acquisition close', meta: 'Completed 1 month ago' },
+      { type: 'task', done: true, text: 'Onboard PayBridge leadership team', meta: 'Completed 3 weeks ago' },
+      { type: 'task', done: false, text: '90-day integration review', meta: 'Maya R. · due in 2 weeks' },
+      { type: 'decision', text: 'Acquire PayBridge at $420M (8.5x EBITDA)', meta: 'Board · 1 month ago' }
+    ],
+    topics: ['integration', 'founder retention', 'playbook capture', 'regional expansion', 'cross-sell opportunities'],
+    boardReport: {
+      date: 'October 27, 2026',
+      preparedBy: 'Maya R., Director of Corp Dev',
+      type: '90-day post-close update',
+      executiveSummary: 'PayBridge acquisition closed 1 month ago for $420M (within 9x EBITDA ceiling). Integration progressing 30% ahead of plan. Q1 financial contribution tracking +14% above plan. Founder retention 100%; customer retention 99%. Recommending continued integration plan and exploration of BridgePay LATAM as a regional bolt-on.',
+      strategicRationale: 'Fintech vertical is now operational. Validated thesis on acquisition over build — would have taken 24–30 months internally vs. 6 months acquired. PayBridge brought $95M ARR, regulatory licenses in 4 markets, and a proven engineering culture that has begun cross-pollinating with the broader product organization.',
+      pillars: [
+        { icon: 'check', title: 'Validated thesis', text: 'Acquisition saved 24–30 months vs internal build. Vertical is operational on Day 1.' },
+        { icon: 'trendingUp', title: 'Ahead of plan', text: '+14% EBITDA, 99% customer retention, 100% founder retention, integration $0.9M of $4M budget.' },
+        { icon: 'globe', title: 'Future optionality', text: 'BridgePay LATAM identified as bolt-on — $45M ARR sister-market with similar regulatory footprint.' }
+      ],
+      statusHeadline: 'Closed — integration in progress (Day 28 of 90)',
+      statusDetail: '90-day formal review due in 2 weeks. All integration milestones on or ahead of schedule. Cross-sell program with existing portfolio activated last week.',
+      headlineMetric: { label: 'Y1 EBITDA contribution vs plan', value: '+14%', sub: '$48M actual vs $42M planned · ahead of every milestone' },
+      financial: [
+        { label: 'Final acquisition price', value: '$420M', sub: '8.5x EBITDA — within 9x board ceiling' },
+        { label: 'Integration spend to date', value: '$0.9M of $4M', sub: 'Trending under budget' },
+        { label: 'Y1 EBITDA contribution', value: '$48M (planned $42M)', sub: '+14% above plan' },
+        { label: 'Customer retention', value: '99%', sub: 'Best-in-class for M&A integrations' },
+        { label: 'Founder retention', value: '100%', sub: 'All key team members signed 3-yr packages' },
+        { label: 'Cross-sell opportunities identified', value: '14', sub: '$2.3M ARR potential' }
+      ],
+      risks: [
+        { level: 'medium', text: 'Integration fatigue — team is in month 1 of 9-month plan', mitigation: 'Integration manager dedicated; biweekly leadership check-ins' },
+        { level: 'low', text: 'Regulatory approval pending in Mexico (1 of 5 markets)', mitigation: 'Expected Q1 2027; no operational blocker in interim' },
+        { level: 'low', text: 'Cultural integration with engineering teams', mitigation: 'Quarterly all-hands; cross-pollination program in place' }
+      ],
+      decisions: [
+        { ask: 'Endorse 90-day review approach', type: 'standard', deadline: 'This board meeting' },
+        { ask: 'Approve continued integration roadmap (no changes)', type: 'standard', deadline: 'This board meeting' },
+        { ask: 'Authorize early-stage exploration of BridgePay LATAM bolt-on', type: 'critical', deadline: 'For full approval at next meeting' }
+      ],
+      recommendation: 'Continue integration plan unchanged. Begin BridgePay LATAM exploration as a bolt-on opportunity ($45M ARR sister-market, similar regulatory footprint). Document the playbook from this acquisition before institutional memory fades.'
+    }
+  }
+];
+
+// ============================================================================
+// ICONS
+// ============================================================================
+const ICONS = {
+  back: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
+  report: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>',
+  sparkle: '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l2.4 7.2L22 10.5l-7.6 2.3L12 22l-2.4-9.2L2 10.5l7.6-2.3z"/></svg>',
+  history: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>',
+  star: '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.2L18.5 21 12 16.5 5.5 21l1.9-7.8L2 9h7z"/></svg>',
+  meeting: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>',
+  decision: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>',
+  check: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  sync: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15-6.7L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/><path d="M16 16h5v5"/></svg>'
+};
+
+const DATASITE_LOGO = '<svg class="partner-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 172"><path fill="#575559" d="M201.6,33.6c33.2,0,46.7,17.3,46.7,52.5c0,35.2-13.4,52.5-46.7,52.5h-35.5V33.6H201.6z M186.2,50.6v71.1h15.4c16.5,0,25.8-6.5,25.8-20.4V71c0-13.9-9.3-20.4-25.8-20.4H186.2z M308.7,84.7c0-8.2-4.8-11.7-12.4-11.7c-7.7,0-13.3,3.9-13.3,11.1h-19.3C264.4,67,278.2,58,297.1,58s30.6,9.4,30.6,27v38.6h11v15h-28.1l-0.2-12.2h-0.6c-4.5,8.7-11.7,14.1-23.8,14.1c-14.2,0-24.9-10-24.9-24.3c0-12.7,9.3-23.2,25.8-24.6l21.8-1.9L308.7,84.7L308.7,84.7z M308.7,107.6v-3.1l-23.2,2c-3.1,0.3-4.3,2-4.3,5.1v6.8c0,4.6,4.8,7.1,11.6,7.1C302.7,125.5,308.7,117.5,308.7,107.6 M377.3,74.8h19.6v-15h-19.6V33.6H358v26.3h-15.6v15H358v63.8h38.9v-15h-19.6L377.3,74.8L377.3,74.8z M456.5,84.7c0-8.2-4.8-11.7-12.4-11.7c-7.7,0-13.3,3.9-13.3,11.1h-19.3C412.2,67,426.1,58,445,58s30.6,9.4,30.6,27v38.6h11v15h-28.1l-0.2-12.2h-0.6c-4.5,8.7-11.7,14.1-23.8,14.1c-14.2,0-24.9-10-24.9-24.3c0-12.7,9.3-23.2,25.8-24.6l21.8-1.9L456.5,84.7L456.5,84.7z M456.5,107.6v-3.1l-23.2,2c-3.1,0.3-4.3,2-4.3,5.1v6.8c0,4.6,4.8,7.1,11.6,7.1C450.5,125.5,456.5,117.5,456.5,107.6 M524.7,89.5c-5.1-1.1-8.7-3.2-8.7-8.3c0-5.1,4.6-8.2,11.3-8.2c6.8,0,11.6,3.7,11.9,11.1h19.3C557.8,66.6,545.1,58,527.3,58c-19.3,0-30.6,10.7-30.6,24.1c0,12.4,6.5,19.6,19.8,22.6l13.6,2.9c7,1.4,11.7,3.6,11.7,9.3c0,5.9-6,8.7-13.4,8.7c-8.5,0-13.4-4.2-14.2-11.9h-19.3c0.8,17.1,12.7,26.9,33.5,26.9c21,0,32.8-10.8,32.8-24.6c0-13.9-9.1-20.4-20.9-23L524.7,89.5z M595.5,50.7h-19.9V33.6h19.9V50.7z M575.8,59.8h19.3v78.8h-19.3V59.8z M644.9,74.8h19.6v-15h-19.6V33.6h-19.3v26.3H610v15h15.6v63.8h38.9v-15h-19.6V74.8z M710.5,58c21.3,0,35.2,16.1,35.2,37.7v9.7h-50.7v5.3c0,9.4,7.3,14.8,15.6,14.8c8.3,0,14.2-4.6,15.1-12.7h19.3c-2.5,17.5-15.6,27.7-34.6,27.7c-22.4,0-35.5-16.7-35.5-41.4C675,74.4,689.2,58,710.5,58 M695.1,90.4H726v-2.8c0-8.5-6.6-14.7-15.5-14.7s-15.5,6.2-15.5,14.7V90.4z"/><path fill="#FF9F27" d="M20.1,20.6h71.1v30H20.1V20.6z M20.1,151.6h71.1v-30H20.1V151.6z M91.2,121.7h30V50.6h-30V121.7z"/><path fill="#575559" d="M752.1,49.2c0.6,0,0.9-0.4,0.9-1v-0.8c0-0.6-0.3-0.9-0.9-0.9h-2.3v2.7H752.1z M749.8,50.4v3.1h-1.6v-8.3h3.8c1.7,0,2.6,1,2.6,2.6c0,1.5-0.8,2.3-1.8,2.5l1.8,3.1h-1.8l-1.7-3.1H749.8z M751.3,56.4c4,0,7.1-3.1,7.1-7.1s-3.1-7.1-7.1-7.1c-4,0-7.1,3.1-7.1,7.1S747.3,56.4,751.3,56.4 M751.3,40.7c4.8,0,8.7,3.9,8.7,8.7s-3.9,8.7-8.7,8.7s-8.7-3.9-8.7-8.7S746.5,40.7,751.3,40.7"/></svg>';
+
+// ============================================================================
+// RENDERERS
+// ============================================================================
+function progressSegments(filled, type) {
+  let html = '<div class="progress">';
+  for (let i = 0; i < 5; i++) {
+    html += `<div class="seg ${i < filled ? 'seg-' + type : ''}"></div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function avatarStack(items) {
+  return `<div class="av-stack">${items.map((it, i) => {
+    const isOverflow = it.startsWith('+');
+    return `<div class="av${isOverflow ? ' av-overflow' : ''}">${it}</div>`;
+  }).join('')}</div>`;
+}
+
+function renderList() {
+  const html = `
+    <div class="page-head">
+      <div></div>
+    </div>
+    <div class="page-title-block">
+      <h1 class="page-title">M&amp;A</h1>
+      <p class="page-subtitle">Strategic acquisition rounds, grouped by objective. <span class="deal-count">${rounds.length} rounds</span></p>
+    </div>
+    <div class="stage-labels">
+      <span>Sourcing</span>
+      <span>Outreach</span>
+      <span>Diligence</span>
+      <span>Negotiation</span>
+      <span>Close</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      ${rounds.map(r => `
+        <div class="round-row" onclick="goDetail('${r.id}')">
+          <div class="round-head">
+            <div class="round-title-text">${r.title}</div>
+            <span class="pip pip-${r.statusType}">${r.status}</span>
+            <span class="date-cell">${r.date}</span>
+          </div>
+          <div class="round-meta">
+            ${avatarStack(r.candidatePreview)}
+            <span class="round-meta-text">${r.candidatePreviewNames}</span>
+          </div>
+          ${progressSegments(r.progress, r.progressType)}
+        </div>
+      `).join('')}
+    </div>
+  `;
+  document.getElementById('list-view').innerHTML = html;
+}
+
+function renderDetail(id) {
+  const r = rounds.find(x => x.id === id);
+  if (!r) { goList(); return; }
+
+  const candidatesHtml = r.candidates.map(c => `
+    <div class="cand-row clickable${c.leading ? ' leading' : ''}${c.eliminated ? '' : ''}" style="${c.eliminated ? 'opacity: 0.7;' : ''}" onclick="goCandidate('${r.id}', '${c.id}')">
+      <div class="cand-head">
+        <div class="av"${c.leading ? ' style="background: var(--brand-soft-2); color: var(--brand); border-color: var(--brand-border);"' : ''}>${c.initials}</div>
+        <div class="cand-info">
+          <div class="cand-name-row">
+            <span class="cand-name${c.eliminated ? ' eliminated' : ''}">${c.name}</span>
+            <span class="pip pip-${c.statusType}">${c.leading ? ICONS.star + ' ' : ''}${c.status}</span>
+          </div>
+          <div class="cand-detail">${c.detail}</div>
+        </div>
+        <span class="cand-stage">${c.stage}</span>
+      </div>
+      ${progressSegments(c.progress, c.progressType)}
+    </div>
+  `).join('');
+
+  const suggestionsHtml = r.suggestions.map(s => `
+    <div class="sugg-card">
+      <div class="sugg-head">
+        <div class="av" style="width: 26px; height: 26px; font-size: 9px;">${s.initials}</div>
+        <div style="min-width: 0; flex: 1;">
+          <div class="sugg-name">${s.name}</div>
+          <div class="sugg-industry">${s.industry}</div>
+        </div>
+      </div>
+      <div class="sugg-metric">${s.metric} · <span style="color: var(--${s.growthType}-text); font-weight: 500;">${s.growth}</span></div>
+      <div class="sugg-why">${s.why}</div>
+      <button class="btn-ghost" style="align-self: flex-start;" onclick="event.stopPropagation(); alert('Demo: in the real app, this would add ${s.name} to the round.')">+ Add to round</button>
+    </div>
+  `).join('');
+
+  const meetingsHtml = r.meetings.map(m => `
+    <div class="list-row">
+      <span class="list-row-icon">${ICONS.meeting}</span>
+      <div class="list-row-content">
+        <div class="list-row-text">${m.title}</div>
+        <div class="list-row-meta">${m.meta}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const activityHtml = r.activity.map(a => {
+    if (a.type === 'task') {
+      return `
+        <div class="list-row">
+          <div class="checkbox${a.done ? ' done' : ''}">${a.done ? ICONS.check : ''}</div>
+          <div class="list-row-content">
+            <div class="list-row-text task-text${a.done ? ' done' : ''}">${a.text}</div>
+            <div class="list-row-meta">${a.meta}</div>
+          </div>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="list-row">
+          <span class="list-row-icon" style="color: var(--brand);">${ICONS.decision}</span>
+          <div class="list-row-content">
+            <div class="list-row-text"><strong style="font-weight: 500;">Decision:</strong> ${a.text}</div>
+            <div class="list-row-meta">${a.meta}</div>
+          </div>
+        </div>
+      `;
+    }
+  }).join('');
+
+  const html = `
+    <div class="page-head">
+      <button class="crumb" onclick="goList()">${ICONS.back} M&amp;A</button>
+      <button class="btn-primary" onclick="goReport('${r.id}')">
+        ${ICONS.report} Open board report
+      </button>
+    </div>
+
+    <div class="page-title-block">
+      <h1 class="page-title">${r.title}</h1>
+      <div class="meta-pills">
+        <span class="pip pip-${r.statusType}">${r.status} · ${r.stage}</span>
+        <span class="sep">·</span><span>Opened ${r.opened}</span>
+        <span class="sep">·</span><span>Owner: ${r.owner}</span>
+      </div>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-label">${ICONS.sparkle} AI summary</div>
+      <p>${r.summary}</p>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <div class="section-h">
+        <span>Candidates in evaluation</span>
+        <span class="section-h-link">${r.candidates.length} ${r.candidates.length === 1 ? 'candidate' : 'candidates'}</span>
+      </div>
+      <div class="cands-list">${candidatesHtml}</div>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <div class="section-h">
+        <span style="display: inline-flex; align-items: center; gap: 8px;">
+          Recommended candidates
+          <span class="brand-tag">via Grata</span>
+        </span>
+        <span class="section-h-link">${r.suggestions.length} matches</span>
+      </div>
+      <div class="suggestions-grid">${suggestionsHtml}</div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-h">
+          <span>Meetings</span>
+          <span class="section-h-link">View all</span>
+        </div>
+        <div class="list-rows">${meetingsHtml}</div>
+      </div>
+      <div>
+        <div class="section-h"><span>Tasks &amp; decisions</span></div>
+        <div class="list-rows">${activityHtml}</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="insight-box">
+        <div class="insight-box-h">${ICONS.sparkle} Suggested next steps</div>
+        <div class="insight-list">
+          ${r.nextSteps.map(s => `
+            <div class="insight-item">
+              <div class="insight-dot"></div>
+              <div>
+                <div class="insight-text">${s.text}</div>
+                <div class="insight-reason">${s.reason}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-box-h">${ICONS.history} Learnings from past rounds</div>
+        <div class="insight-list">
+          ${r.learnings.map(l => `
+            <div class="insight-item">
+              <span class="pip pip-${l.type}" style="flex-shrink: 0; margin-top: 1px;">${l.label}</span>
+              <div>
+                <div class="insight-text">${l.text}</div>
+                <div class="insight-reason">${l.source}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-h"><span>Topics</span></div>
+      <div class="topics-list">
+        ${r.topics.map(t => `<span class="topic">${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('detail-view').innerHTML = html;
+}
+
+// ============================================================================
+// CANDIDATE DETAIL
+// ============================================================================
+function defaultDetails(c, round) {
+  const status = c.status;
+  let headline, points, strengths, concerns, nextSteps;
+
+  if (status === 'Leading') {
+    headline = `Why ${c.name} is leading`;
+    points = [
+      { title: 'Top of evaluation across criteria', detail: `Strongest signals on financial fit, strategic alignment, and stage progression among candidates in this round.` },
+      { title: `Currently at ${c.stage}`, detail: `Advancing on schedule. Round average to reach this stage is 4–6 weeks; ${c.name} hit it in line with that.` },
+      { title: 'Mutual intent confirmed', detail: 'Both sides have committed time and resources to advancing the conversation.' }
+    ];
+    strengths = [`Strong on ${round.title.toLowerCase()} thesis fit`, 'Active engagement', 'On-track progression'];
+    concerns = ['Pricing not yet finalized', 'Final integration plan pending'];
+    nextSteps = [
+      { text: `Continue to ${nextStage(c.stage)} on accelerated path`, reason: 'Front-runner momentum is highest predictor of close' },
+      { text: 'Lock down integration plan', reason: 'Pre-close integration plans prevented surprises in past closed rounds' }
+    ];
+  } else if (status === 'Active') {
+    headline = `Current state of ${c.name}`;
+    points = [
+      { title: `At ${c.stage} stage`, detail: 'Diligence work continuing on standard timeline; no major blockers raised.' },
+      { title: 'Not yet differentiated from front-runner', detail: 'Strong on multiple criteria but the leading candidate currently scores higher on financial fit.' },
+      { title: 'Could move up if leader stalls', detail: 'Maintained as active candidate to preserve optionality.' }
+    ];
+    strengths = ['Solid evaluation signals', 'Engaged team', 'Within stage SLA'];
+    concerns = ['Behind front-runner on key dimensions', 'No clear differentiator yet'];
+    nextSteps = [
+      { text: `Advance to ${nextStage(c.stage)}`, reason: 'Maintain optionality; back-up if leader fails to close' }
+    ];
+  } else if (status === 'Paused') {
+    headline = `Why ${c.name} is paused`;
+    points = [
+      { title: 'Blocker raised in evaluation', detail: 'A specific issue (pricing, compliance, or fit) is preventing further progression until resolved.' },
+      { title: `Stalled at ${c.stage}`, detail: 'Cannot advance until blocker is addressed; team is awaiting input from candidate or external party.' },
+      { title: 'Pause becoming a risk', detail: 'Extended pauses historically correlate with candidates losing interest or accepting competing offers.' }
+    ];
+    strengths = ['Otherwise solid candidate', 'Strategic fit intact'];
+    concerns = ['Specific blocker unresolved', 'Pause length increasing risk', 'Communication slowing'];
+    nextSteps = [
+      { text: 'Set hard decision deadline this week', reason: 'Avoid the "indefinite pause" pattern that lost candidates in past rounds' },
+      { text: 'If blocker not resolvable: eliminate decisively', reason: 'Frees up capacity for active candidates' }
+    ];
+  } else if (status === 'Eliminated' || status === 'Walked') {
+    const isWalk = status === 'Walked';
+    headline = `Why ${c.name} ${isWalk ? 'withdrew' : 'was eliminated'}`;
+    points = isWalk ? [
+      { title: 'Candidate withdrew from process', detail: 'Reasons recorded include competing offers, valuation gap, or process delays.' },
+      { title: `Withdrew at ${c.stage}`, detail: 'Diligence work completed up to this stage is preserved for future reference.' },
+      { title: 'Pattern worth analyzing', detail: 'Multiple withdrawals in the same round can indicate process issues — captured in retrospective.' }
+    ] : [
+      { title: 'Decision to eliminate made early', detail: 'Following the playbook of fast eliminations to preserve diligence capacity for top candidates.' },
+      { title: `Eliminated at ${c.stage}`, detail: 'No further engagement planned in this round.' },
+      { title: 'May be revisited in future rounds', detail: 'If circumstances change (regulation, valuation, market), candidate could re-enter consideration.' }
+    ];
+    strengths = ['Diligence learnings preserved'];
+    concerns = isWalk ? ['Lost candidate', 'Process gap to investigate'] : ['Strategic fit didn\'t match', 'Resource trade-off'];
+    nextSteps = [
+      { text: 'Document outcome for retrospective', reason: 'Pattern recognition across rounds requires consistent capture' },
+      { text: isWalk ? 'Add to "lost candidate" tracking for future re-engagement' : 'Add to watchlist for landscape changes', reason: 'Past relationships have re-emerged as opportunities later' }
+    ];
+  } else if (status === 'Acquired') {
+    headline = `Why we chose ${c.name}`;
+    points = [
+      { title: 'Best fit on all criteria', detail: 'Top-ranked across financial, strategic, cultural, and integration dimensions.' },
+      { title: 'Closed efficiently', detail: 'Deal closed in line with or ahead of average timeline; minimal post-close surprises.' },
+      { title: 'Founder retention strong', detail: 'Key team members signed multi-year retention packages; integration progressing smoothly.' }
+    ];
+    strengths = ['Closed deal', 'Post-close integration on track', 'Founder team retained'];
+    concerns = ['Standard post-close integration risks'];
+    nextSteps = [
+      { text: 'Complete 90-day integration review', reason: 'Standard post-close milestone' },
+      { text: 'Document playbook from this acquisition', reason: 'Replicable patterns are highest-leverage learning' }
+    ];
+  } else {
+    headline = `${c.name} status`;
+    points = [{ title: c.status, detail: `Currently at ${c.stage} stage.` }];
+    strengths = []; concerns = []; nextSteps = [];
+  }
+
+  // Try to parse simple metrics from the detail string
+  const arrMatch = (c.detail || '').match(/\$[\d.]+M\s*ARR/);
+  const locMatch = (c.detail || '').match(/·\s*([A-Za-z ]+)\s*·/);
+  const metrics = [
+    arrMatch ? { label: 'ARR', value: arrMatch[0].replace(/\s*ARR/, '') } : null,
+    locMatch ? { label: 'Location', value: locMatch[1].trim() } : null,
+    { label: 'Stage', value: c.stage },
+    { label: 'Status', value: c.status }
+  ].filter(Boolean);
+
+  // Derive a default owner only for non-terminal states
+  const isTerminal = ['Eliminated', 'Walked', 'Acquired'].includes(status);
+  const ownerInitials = (round.owner || '??').split(' ').map(w => w[0]).join('').slice(0, 2);
+  let nextOwner = null;
+  let nextStep = null;
+  if (!isTerminal) {
+    const actionByStatus = {
+      'Leading': `Driving ${c.name} toward close`,
+      'Active': `Continuing diligence on ${c.name}`,
+      'Paused': `Awaiting candidate response; decision pending`
+    };
+    nextOwner = {
+      initials: ownerInitials,
+      name: round.owner || 'Round owner',
+      role: 'Round owner',
+      action: actionByStatus[status] || `Reviewing ${c.name}`,
+      status: status === 'Paused' ? 'Awaiting response' : 'In review',
+      due: 'This week'
+    };
+
+    // Derive next-step from stage progression
+    const nextStageMap = {
+      'Sourcing':    { stage: 'Outreach',    action: 'Initiate first outreach and schedule intro call' },
+      'Outreach':    { stage: 'Diligence',   action: 'Sign NDA, open data room, begin formal diligence' },
+      'Diligence':   { stage: 'Negotiation', action: 'Open pricing negotiations and draft term sheet' },
+      'Negotiation': { stage: 'Close',       action: 'Finalize terms, secure board approval, prepare close' }
+    };
+    const ns = nextStageMap[c.stage];
+    if (ns) {
+      nextStep = {
+        initials: ownerInitials,
+        name: round.owner || 'Round owner',
+        role: 'Round owner',
+        stage: ns.stage,
+        action: ns.action,
+        expected: 'Following current step'
+      };
+    }
+  }
+
+  return {
+    metrics,
+    reasoning: { headline, points },
+    strengths,
+    concerns,
+    nextOwner,
+    nextStep,
+    timeline: [
+      { date: 'Recently', event: `Last activity at ${c.stage} stage`, who: round.owner },
+      { date: 'Earlier', event: `Identified in round: ${round.title}`, who: 'Sourcing team' }
+    ],
+    nextSteps
+  };
+}
+
+function nextStage(stage) {
+  const order = ['Sourcing', 'Outreach', 'Diligence', 'Negotiation', 'Close'];
+  const idx = order.indexOf(stage);
+  return idx >= 0 && idx < order.length - 1 ? order[idx + 1] : stage;
+}
+
+function renderCandidate(roundId, candidateId) {
+  const round = rounds.find(r => r.id === roundId);
+  if (!round) { goList(); return; }
+  const c = round.candidates.find(x => x.id === candidateId);
+  if (!c) { goDetail(roundId); return; }
+  const d = c.details || defaultDetails(c, round);
+
+  const stages = ['Sourcing', 'Outreach', 'Diligence', 'Negotiation', 'Close'];
+
+  const html = `
+    <div class="page-head">
+      <button class="crumb" onclick="goDetail('${roundId}')">${ICONS.back} ${round.title}</button>
+      <button class="btn-sync-grata" onclick="alert('Demo: would push this candidate to your Datasite Pipeline workspace and pull back the latest enrichment — financials, headcount, ownership, executive contacts, growth signals — keeping both systems in sync.')">
+        ${ICONS.sync} Sync with ${DATASITE_LOGO} Pipeline<span class="sync-status">· last synced 2h ago</span>
+      </button>
+    </div>
+
+    <div class="cand-identity">
+      <div class="av"${c.leading ? ' style="background: var(--brand-soft-2); color: var(--brand); border-color: var(--brand-border);"' : ''}>${c.initials}</div>
+      <div style="flex: 1; min-width: 0;">
+        <h1>${c.name}</h1>
+        <div class="meta">${c.detail}</div>
+      </div>
+      <span class="pip pip-${c.statusType}" style="font-size: 12px; padding: 5px 12px;">${c.leading ? ICONS.star + ' ' : ''}${c.status}</span>
+    </div>
+
+    <div class="cand-progress-block">
+      <div style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">Pipeline progress · ${c.stage}</div>
+      ${progressSegments(c.progress, c.progressType)}
+      <div class="cand-progress-stages">
+        ${stages.map(s => `<span${s === c.stage ? ' style="color: var(--text-primary); font-weight: 500;"' : ''}>${s}</span>`).join('')}
+      </div>
+    </div>
+
+    ${d.nextOwner ? `
+    <div class="responsible-block">
+      <div class="av">${d.nextOwner.initials}</div>
+      <div class="resp-content">
+        <div class="resp-top">
+          <span class="resp-name">${d.nextOwner.name}</span>
+          <span class="resp-role">· ${d.nextOwner.role}</span>
+          <span class="pip pip-${d.nextOwner.status === 'Awaiting response' ? 'warning' : 'info'}">${d.nextOwner.status}</span>
+        </div>
+        <div class="resp-action">${d.nextOwner.action}</div>
+        <div class="resp-due">
+          Due <span${d.nextOwner.overdue ? ' class="overdue"' : ''}>${d.nextOwner.due}</span>${d.nextOwner.daysLeft !== undefined ? ` · <span${d.nextOwner.overdue ? ' class="overdue"' : ''}>${d.nextOwner.daysLeft} days remaining</span>` : ''}
+        </div>
+      </div>
+      <button class="btn-meeting" onclick="alert('Demo: would open scheduler to create a meeting with ${d.nextOwner.name} about ${c.name}.')">
+        ${ICONS.meeting} Create meeting with ${d.nextOwner.name.split(' ')[0]}
+      </button>
+    </div>
+    ` : ''}
+
+    ${d.nextStep ? `
+    <div class="next-step-block">
+      <div class="av">${d.nextStep.initials}</div>
+      <div class="next-step-content">
+        <div class="next-step-header">
+          <span class="next-step-label">↓ Up next</span>
+          <span class="next-step-name">${d.nextStep.name}</span>
+          <span class="next-step-role">· ${d.nextStep.role}</span>
+          <span class="next-step-stage">→ ${d.nextStep.stage}</span>
+        </div>
+        <div class="next-step-action">${d.nextStep.action}</div>
+        <div class="next-step-expected">Expected: ${d.nextStep.expected}</div>
+      </div>
+    </div>
+    ` : ''}
+
+    <div class="reasoning-card">
+      <h3>${ICONS.sparkle} ${d.reasoning.headline}</h3>
+      <div class="reasoning-points">
+        ${d.reasoning.points.map((p, i) => `
+          <div class="reasoning-point">
+            <div class="num">${i + 1}</div>
+            <div>
+              <div class="reasoning-point-title">${p.title}</div>
+              <div class="reasoning-point-detail">${p.detail}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <div class="section-h"><span>Company snapshot</span></div>
+      <div class="metrics-grid">
+        ${d.metrics.map(m => `
+          <div class="metric-card">
+            <div class="metric-label">${m.label}</div>
+            <div class="metric-value${m.positive ? ' positive' : ''}">${m.value}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-h"><span>Strengths</span></div>
+        <div class="sc-list">
+          ${d.strengths.length ? d.strengths.map(s => `<div class="sc-item"><div class="dot s"></div>${s}</div>`).join('') : '<div class="sc-item" style="color: var(--text-tertiary);">No strengths recorded</div>'}
+        </div>
+      </div>
+      <div>
+        <div class="section-h"><span>Concerns</span></div>
+        <div class="sc-list">
+          ${d.concerns.length ? d.concerns.map(s => `<div class="sc-item"><div class="dot c"></div>${s}</div>`).join('') : '<div class="sc-item" style="color: var(--text-tertiary);">No concerns recorded</div>'}
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <div class="section-h"><span>Timeline</span></div>
+      <div class="timeline-list">
+        ${d.timeline.map((t, i) => `
+          <div class="timeline-item${i === 0 ? ' first' : ''}">
+            <div class="timeline-date">${t.date}</div>
+            <div class="timeline-event">${t.event}</div>
+            ${t.who ? `<div class="timeline-who">${t.who}</div>` : ''}
+            ${t.note ? `<div class="timeline-note">${t.note}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div>
+      <div class="insight-box" style="background: var(--brand-soft); border-color: var(--brand-border);">
+        <div class="insight-box-h">${ICONS.sparkle} Suggested next steps for ${c.name}</div>
+        <div class="insight-list">
+          ${d.nextSteps.length ? d.nextSteps.map(s => `
+            <div class="insight-item">
+              <div class="insight-dot"></div>
+              <div>
+                <div class="insight-text">${s.text}</div>
+                <div class="insight-reason">${s.reason}</div>
+              </div>
+            </div>
+          `).join('') : '<div style="font-size: 13px; color: var(--text-tertiary);">No suggested actions at this time.</div>'}
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('candidate-view').innerHTML = html;
+}
+
+// ============================================================================
+// BOARD REPORT — SLIDE DECK
+// ============================================================================
+const RICONS = {
+  zap: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  users: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  target: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  globe: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  shield: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  trendingUp: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
+  dollar: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+  book: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  check: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  alertTri: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  alertCircle: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  info: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+};
+
+function renderReport(roundId) {
+  const round = rounds.find(r => r.id === roundId);
+  if (!round || !round.boardReport) { goDetail(roundId); return; }
+  const r = round.boardReport;
+
+  // Pipeline stages
+  const STAGES = ['Sourcing', 'Outreach', 'Diligence', 'Negotiation', 'Close'];
+  const currentIdx = STAGES.indexOf(round.stage);
+  const isClosedSuccess = round.statusType === 'success';
+  const isClosedDanger = round.statusType === 'danger' && currentIdx === -1 || round.status === 'Rejected';
+
+  const pipelineHtml = STAGES.map((s, i) => {
+    let cls = '';
+    let content = i + 1;
+    if (round.status === 'Closed') {
+      cls = 'done';
+      if (i === STAGES.length - 1) { cls = 'done terminal-success'; content = '✓'; }
+      else { content = '✓'; }
+    } else if (round.status === 'Rejected') {
+      const stuckAt = STAGES.indexOf(round.stage);
+      if (i < stuckAt) { cls = 'done'; content = '✓'; }
+      else if (i === stuckAt) { cls = 'terminal-danger'; content = '✕'; }
+    } else if (currentIdx >= 0) {
+      if (i < currentIdx) { cls = 'done'; content = '✓'; }
+      else if (i === currentIdx) cls = 'current';
+    }
+    let sub = '';
+    if (cls.includes('terminal-success')) sub = 'Closed';
+    else if (cls.includes('terminal-danger')) sub = 'Round ended';
+    else if (cls.includes('done')) sub = 'Complete';
+    else if (cls === 'current') sub = 'In progress';
+    return `
+      <div class="pipe-stage ${cls}">
+        <div class="dot">${content}</div>
+        <div class="name">${s}</div>
+        ${sub ? `<div class="sub">${sub}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  // Price scenarios bar chart (if present)
+  let scenariosHtml = '';
+  if (r.priceScenarios && r.priceScenarios.length) {
+    const max = Math.max(...r.priceScenarios.map(s => s.value));
+    scenariosHtml = `
+      <div class="scenarios">
+        <div class="scenarios-title">Pricing scenarios</div>
+        ${r.priceScenarios.map(s => `
+          <div class="scenario ${s.kind}">
+            <div class="scenario-head">
+              <span class="scenario-label">${s.label}</span>
+              <span class="scenario-value">${s.display}</span>
+            </div>
+            <div class="scenario-track">
+              <div class="scenario-fill" style="width: ${(s.value / max * 100).toFixed(1)}%"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  // Status badge for cover
+  const statusBadgeClass = round.statusType || 'info';
+
+  // Risk icon
+  const riskIcon = (level) => level === 'high' ? RICONS.alertTri : level === 'medium' ? RICONS.alertCircle : RICONS.info;
+
+  // Decisions
+  const decisionTagLabel = (type) => type === 'critical' ? 'Critical' : type === 'standard' ? 'Standard' : 'For information';
+
+  const html = `
+    <div class="report-page">
+      <div class="report-actions">
+        <div class="report-actions-left">
+          <button class="crumb" onclick="goDetail('${roundId}')">${ICONS.back} Back to round</button>
+          <span class="slide-counter">8 slides · Board materials</span>
+        </div>
+        <div class="report-actions-right">
+          <button class="btn-secondary" onclick="window.print()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print
+          </button>
+          <button class="btn-secondary" onclick="alert('Demo: would share this report with board members via secure link.')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            Share with board
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide 1: Cover -->
+      <section class="slide slide-cover">
+        <div>
+          <div class="cover-eyebrow">M&amp;A round board report</div>
+          <h1 class="cover-title">${round.title}</h1>
+          <div class="cover-subtitle">${r.type}</div>
+        </div>
+        <div class="cover-meta">
+          <span class="cover-status-badge ${statusBadgeClass}">
+            <span class="dot"></span> ${round.status} · ${round.stage}
+          </span>
+          <div class="cover-meta-item">
+            <div class="label">Prepared for</div>
+            <div class="value">Board of Directors</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="label">Prepared by</div>
+            <div class="value">${r.preparedBy}</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="label">Date</div>
+            <div class="value">${r.date}</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: Executive summary -->
+      <section class="slide slide-exec">
+        <div class="slide-num">01 — Executive summary</div>
+        <h2 class="slide-title">The ask, in one paragraph</h2>
+        <p class="exec-headline">${r.executiveSummary}</p>
+      </section>
+
+      <!-- Slide 3: Strategic rationale -->
+      <section class="slide">
+        <div class="slide-num">02 — Strategic rationale</div>
+        <h2 class="slide-title">Why this round, why now</h2>
+        <div class="pillars-grid">
+          ${r.pillars.map((p, i) => `
+            <div class="pillar">
+              <div class="pillar-num">0${i + 1}</div>
+              <div class="pillar-icon">${RICONS[p.icon] || RICONS.target}</div>
+              <div class="pillar-title">${p.title}</div>
+              <div class="pillar-text">${p.text}</div>
+            </div>
+          `).join('')}
+        </div>
+        <p class="rationale-detail">${r.strategicRationale}</p>
+      </section>
+
+      <!-- Slide 4: Status -->
+      <section class="slide slide-status">
+        <div class="slide-num">03 — Current status</div>
+        <h2 class="slide-title">Where we are in the pipeline</h2>
+        <div class="pipeline">${pipelineHtml}</div>
+        <div class="status-headline">${r.statusHeadline}</div>
+        <p class="status-detail">${r.statusDetail}</p>
+      </section>
+
+      <!-- Slide 5: Financial picture -->
+      <section class="slide">
+        <div class="slide-num">04 — Financial picture</div>
+        <h2 class="slide-title">The numbers that matter</h2>
+        ${r.headlineMetric ? `
+          <div class="headline-metric">
+            <div class="hm-label">${r.headlineMetric.label}</div>
+            <div class="hm-value">${r.headlineMetric.value}</div>
+            <div class="hm-sub">${r.headlineMetric.sub}</div>
+          </div>
+        ` : ''}
+        ${scenariosHtml}
+        <div class="fin-metrics">
+          ${r.financial.map(f => `
+            <div class="fin-metric">
+              <div class="fin-metric-label">${f.label}</div>
+              <div class="fin-metric-value">${f.value}</div>
+              <div class="fin-metric-sub">${f.sub}</div>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- Slide 6: Risk -->
+      <section class="slide slide-risk">
+        <div class="slide-num">05 — Risk assessment</div>
+        <h2 class="slide-title">Key risks &amp; how we're handling them</h2>
+        <div class="risk-grid">
+          ${r.risks.map(risk => `
+            <div class="risk-card">
+              <div class="risk-card-bar ${risk.level}"></div>
+              <div class="risk-card-content">
+                <div class="risk-card-head">
+                  <div class="risk-card-icon ${risk.level}">${riskIcon(risk.level)}</div>
+                  <span class="risk-card-level ${risk.level}">${risk.level} risk</span>
+                  <div class="risk-card-text">${risk.text}</div>
+                </div>
+                <div class="risk-card-mit">
+                  <span class="risk-card-mit-label">Mitigation</span>${risk.mitigation}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- Slide 7: Decisions -->
+      <section class="slide">
+        <div class="slide-num">06 — Decisions requested</div>
+        <h2 class="slide-title">What we need from the board</h2>
+        <div class="decisions-grid">
+          ${r.decisions.map((d, i) => `
+            <div class="decision-card ${d.type}">
+              <div class="decision-card-num">${String(i + 1).padStart(2, '0')}</div>
+              <div class="decision-card-body">
+                <div class="decision-card-tags">
+                  <span class="decision-card-tag kind">${decisionTagLabel(d.type)}</span>
+                  <span class="decision-card-tag">${d.deadline}</span>
+                </div>
+                <div class="decision-card-ask">${d.ask}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- Slide 8: Recommendation -->
+      <section class="slide slide-rec">
+        <div class="slide-num">07 — Recommendation</div>
+        <div class="rec-mark"></div>
+        <h2 class="slide-title">Our recommendation to the board</h2>
+        <p class="rec-statement">${r.recommendation}</p>
+      </section>
+
+      <div class="report-footer">SHERPANY · CONFIDENTIAL — BOARD MATERIALS · ${r.date}</div>
+    </div>
+  `;
+  document.getElementById('report-view').innerHTML = html;
+}
+
+// ============================================================================
+// ROUTING
+// ============================================================================
+// pushState is blocked inside sandboxed iframes (e.g. about:srcdoc artifact previews).
+// Wrap it so URL updates work in a real browser but fail silently in the sandbox.
+function safePush(hash) {
+  try { history.pushState({}, '', hash); } catch (e) { /* sandbox: ignore */ }
+}
+
+function setActiveNav(idx) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+}
+
+function setView(name) {
+  ['list-view', 'detail-view', 'candidate-view', 'report-view', 'meetings-view'].forEach(v => {
+    document.getElementById(v).style.display = 'none';
+  });
+  const el = document.getElementById(name);
+  el.style.display = 'block';
+  el.classList.remove('fade-in');
+  void el.offsetWidth;
+  el.classList.add('fade-in');
+  try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
+}
+
+function goList() {
+  safePush('#');
+  setActiveNav(1);
+  setView('list-view');
+}
+
+function goDetail(id) {
+  safePush('#/round/' + id);
+  setActiveNav(1);
+  renderDetail(id);
+  setView('detail-view');
+}
+
+function goCandidate(roundId, candidateId) {
+  safePush('#/round/' + roundId + '/candidate/' + candidateId);
+  setActiveNav(1);
+  renderCandidate(roundId, candidateId);
+  setView('candidate-view');
+}
+
+function goReport(roundId) {
+  safePush('#/round/' + roundId + '/report');
+  setActiveNav(1);
+  renderReport(roundId);
+  setView('report-view');
+}
+
+function goMeetings() {
+  safePush('#/meetings');
+  setActiveNav(0);
+  setView('meetings-view');
+}
+
+function handleRoute() {
+  const hash = window.location.hash || '';
+  const reportMatch = hash.match(/^#\/round\/([^/]+)\/report$/);
+  const candidateMatch = hash.match(/^#\/round\/([^/]+)\/candidate\/([^/]+)$/);
+  if (reportMatch) {
+    renderReport(reportMatch[1]);
+    setActiveNav(1);
+    setView('report-view');
+  } else if (candidateMatch) {
+    renderCandidate(candidateMatch[1], candidateMatch[2]);
+    setActiveNav(1);
+    setView('candidate-view');
+  } else if (hash.startsWith('#/round/')) {
+    const id = hash.replace('#/round/', '');
+    renderDetail(id);
+    setActiveNav(1);
+    setView('detail-view');
+  } else if (hash === '#/meetings') {
+    setActiveNav(0);
+    setView('meetings-view');
+  } else {
+    setActiveNav(1);
+    setView('list-view');
+  }
+}
+
+// ============================================================================
+// INIT
+// ============================================================================
+renderList();
+window.addEventListener('popstate', handleRoute);
+window.addEventListener('hashchange', handleRoute);
+handleRoute();
+</script>
+
+</body>
+</html>
